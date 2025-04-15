@@ -51,12 +51,15 @@ function calculate() {
     const conformity = scores.map(row => {
         const personalAvg = row.reduce((a, b) => a + b) / row.length;
         const diff = Math.abs(personalAvg - overallAvg);
-        const scaled = Math.max(0, 100 - (diff / 30) * 100); // linear drop-off to 0 at diff=30
+        const scaled = Math.max(0, 100 - (diff / 30) * 100);
         return Math.round(scaled);
     });
 
     const ctx = document.getElementById('chart').getContext('2d');
-    new Chart(ctx, {
+    if (window.myChart) {
+        window.myChart.destroy();
+    }
+    window.myChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: names,
@@ -64,14 +67,14 @@ function calculate() {
                 {
                     label: '평균 일치율 (%)',
                     data: conformity,
-                    backgroundColor: 'rgba(255, 255, 255, 0.8)', // brighter white
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
                     borderColor: '#000',
                     borderWidth: 1
                 },
                 {
                     label: '점수 폭',
                     data: ranges,
-                    backgroundColor: 'rgba(180, 180, 180, 0.8)', // lighter gray
+                    backgroundColor: 'rgba(180, 180, 180, 0.8)',
                     borderColor: '#000',
                     borderWidth: 1
                 }
