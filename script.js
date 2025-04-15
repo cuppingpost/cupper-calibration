@@ -1,3 +1,4 @@
+
 function generateTable() {
     const numCuppers = document.getElementById('numCuppers').value;
     const numCoffees = document.getElementById('numCoffees').value;
@@ -49,8 +50,9 @@ function calculate() {
     const ranges = scores.map(row => Math.max(...row) - Math.min(...row));
     const conformity = scores.map(row => {
         const personalAvg = row.reduce((a, b) => a + b) / row.length;
-        const raw = 100 - (Math.abs(personalAvg - overallAvg) / overallAvg * 100);
-        return Math.max(0, (raw - 90) * 10);
+        const diff = Math.abs(personalAvg - overallAvg);
+        const scaled = Math.max(0, 100 - (diff / 30) * 100); // linear drop-off to 0 at diff=30
+        return Math.round(scaled);
     });
 
     const ctx = document.getElementById('chart').getContext('2d');
@@ -59,42 +61,56 @@ function calculate() {
         data: {
             labels: names,
             datasets: [
-                { label: '평균 일치율 (보정값 %)', data: conformity, backgroundColor: '#fff' },
-                { label: '점수 폭', data: ranges, backgroundColor: '#888' }
+                {
+                    label: '평균 일치율 (%)',
+                    data: conformity,
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)', // brighter white
+                    borderColor: '#000',
+                    borderWidth: 1
+                },
+                {
+                    label: '점수 폭',
+                    data: ranges,
+                    backgroundColor: 'rgba(180, 180, 180, 0.8)', // lighter gray
+                    borderColor: '#000',
+                    borderWidth: 1
+                }
             ]
         },
         options: {
             responsive: true,
             scales: {
-                y: { beginAtZero: true, max: 100, ticks: { color: '#000' } },
-                x: { ticks: { color: '#000' } }
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: { color: '#000' }
+                },
+                x: {
+                    ticks: { color: '#000' }
+                }
             },
             plugins: {
-                legend: { labels: { color: '#000' } }
+                legend: {
+                    labels: { color: '#000' }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.formattedValue}%`;
+                        }
+                    }
+                },
+                datalabels: {
+                    color: '#000',
+                    anchor: 'end',
+                    align: 'start',
+                    formatter: Math.round,
+                    font: {
+                        weight: 'bold'
+                    }
+                }
             }
-        }
+        },
+        plugins: [ChartDataLabels]
     });
-}
-
-function saveData() {
-    const data = document.documentElement.outerHTML;
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'cupper-data.json';
-    a.click();
-}
-
-function loadData() {
-    const fileInput = document.getElementById('fileInput');
-    fileInput.click();
-    fileInput.onchange = () => {
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            document.documentElement.innerHTML = event.target.result;
-        };
-        reader.readAsText(file);
-    };
 }
