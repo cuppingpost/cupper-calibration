@@ -1,3 +1,4 @@
+
 function generateTable() {
     const numCuppers = document.getElementById('numCuppers').value;
     const numCoffees = document.getElementById('numCoffees').value;
@@ -46,55 +47,39 @@ function calculate() {
 
     const overallAvg = coffeeAverages.reduce((a, b) => a + b) / coffeeAverages.length;
 
-    const ranges = scores.map(row => Math.max(...row) - Math.min(...row));
     const conformity = scores.map(row => {
         const personalAvg = row.reduce((a, b) => a + b) / row.length;
-        const raw = 100 - (Math.abs(personalAvg - overallAvg) / overallAvg * 100);
-        return Math.max(0, (raw - 90) * 10);
+        const diff = Math.abs(personalAvg - overallAvg);
+        const scaled = Math.max(0, 100 - (diff * 5)); // 0% if 20+ difference, 100% if 0 difference
+        return Math.min(100, Math.round(scaled));
     });
 
-    const ctx = document.getElementById('chart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: names,
-            datasets: [
-                { label: '평균 일치율 (보정값 %)', data: conformity, backgroundColor: '#fff' },
-                { label: '점수 폭', data: ranges, backgroundColor: '#888' }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: { beginAtZero: true, max: 100, ticks: { color: '#000' } },
-                x: { ticks: { color: '#000' } }
-            },
-            plugins: {
-                legend: { labels: { color: '#000' } }
-            }
-        }
-    });
-}
-
-function saveData() {
-    const data = document.documentElement.outerHTML;
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'cupper-data.json';
-    a.click();
-}
-
-function loadData() {
-    const fileInput = document.getElementById('fileInput');
-    fileInput.click();
-    fileInput.onchange = () => {
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            document.documentElement.innerHTML = event.target.result;
-        };
-        reader.readAsText(file);
-    };
+    const results = document.createElement('table');
+    results.innerHTML = `
+        <thead>
+            <tr>
+                <th>커퍼 이름</th>
+                <th>일치도 (%)</th>
+                <th>점수 평균</th>
+                <th>점수 폭</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${scores.map((row, i) => {
+                const min = Math.min(...row);
+                const max = Math.max(...row);
+                const avg = (row.reduce((a, b) => a + b, 0) / row.length).toFixed(2);
+                const range = (max - min).toFixed(2);
+                return `<tr>
+                    <td>${names[i]}</td>
+                    <td>${conformity[i]}%</td>
+                    <td>${avg}</td>
+                    <td>${range}</td>
+                </tr>`;
+            }).join('')}
+        </tbody>`;
+    
+    const chartDiv = document.getElementById('chart');
+    chartDiv.innerHTML = '';
+    chartDiv.appendChild(results);
 }
