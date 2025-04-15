@@ -1,4 +1,3 @@
-
 function generateTable() {
     const numCuppers = document.getElementById('numCuppers').value;
     const numCoffees = document.getElementById('numCoffees').value;
@@ -50,9 +49,8 @@ function calculate() {
     const ranges = scores.map(row => Math.max(...row) - Math.min(...row));
     const conformity = scores.map(row => {
         const personalAvg = row.reduce((a, b) => a + b) / row.length;
-        const diff = Math.abs(personalAvg - overallAvg);
-        const scaled = Math.max(0, 100 - (diff / 20) * 100);
-        return Math.round(scaled);
+        const raw = 100 - (Math.abs(personalAvg - overallAvg) / overallAvg * 100);
+        return Math.max(0, (raw - 90) * 10);
     });
 
     const ctx = document.getElementById('chart').getContext('2d');
@@ -61,7 +59,7 @@ function calculate() {
         data: {
             labels: names,
             datasets: [
-                { label: '평균 일치율 (%)', data: conformity, backgroundColor: '#fff' },
+                { label: '평균 일치율 (보정값 %)', data: conformity, backgroundColor: '#fff' },
                 { label: '점수 폭', data: ranges, backgroundColor: '#888' }
             ]
         },
@@ -76,4 +74,27 @@ function calculate() {
             }
         }
     });
+}
+
+function saveData() {
+    const data = document.documentElement.outerHTML;
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cupper-data.json';
+    a.click();
+}
+
+function loadData() {
+    const fileInput = document.getElementById('fileInput');
+    fileInput.click();
+    fileInput.onchange = () => {
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            document.documentElement.innerHTML = event.target.result;
+        };
+        reader.readAsText(file);
+    };
 }
