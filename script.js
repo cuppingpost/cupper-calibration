@@ -47,39 +47,33 @@ function calculate() {
 
     const overallAvg = coffeeAverages.reduce((a, b) => a + b) / coffeeAverages.length;
 
+    const ranges = scores.map(row => Math.max(...row) - Math.min(...row));
     const conformity = scores.map(row => {
         const personalAvg = row.reduce((a, b) => a + b) / row.length;
         const diff = Math.abs(personalAvg - overallAvg);
-        const scaled = Math.max(0, 100 - (diff * 5)); // 0% if 20+ difference, 100% if 0 difference
-        return Math.min(100, Math.round(scaled));
+        const scaled = Math.max(0, 100 - (diff / 20) * 100);
+        return Math.round(scaled);
     });
 
-    const results = document.createElement('table');
-    results.innerHTML = `
-        <thead>
-            <tr>
-                <th>커퍼 이름</th>
-                <th>일치도 (%)</th>
-                <th>점수 평균</th>
-                <th>점수 폭</th>
-            </tr>
-        </thead>
-        <tbody>
-            ${scores.map((row, i) => {
-                const min = Math.min(...row);
-                const max = Math.max(...row);
-                const avg = (row.reduce((a, b) => a + b, 0) / row.length).toFixed(2);
-                const range = (max - min).toFixed(2);
-                return `<tr>
-                    <td>${names[i]}</td>
-                    <td>${conformity[i]}%</td>
-                    <td>${avg}</td>
-                    <td>${range}</td>
-                </tr>`;
-            }).join('')}
-        </tbody>`;
-    
-    const chartDiv = document.getElementById('chart');
-    chartDiv.innerHTML = '';
-    chartDiv.appendChild(results);
+    const ctx = document.getElementById('chart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: names,
+            datasets: [
+                { label: '평균 일치율 (%)', data: conformity, backgroundColor: '#fff' },
+                { label: '점수 폭', data: ranges, backgroundColor: '#888' }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true, max: 100, ticks: { color: '#000' } },
+                x: { ticks: { color: '#000' } }
+            },
+            plugins: {
+                legend: { labels: { color: '#000' } }
+            }
+        }
+    });
 }
