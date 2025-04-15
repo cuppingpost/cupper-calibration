@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>커핑 칼리브레이션 프로그램</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>커핑 칼리브레이션 프로그램</h1>
+        <label>커퍼 수: <input type="number" id="numCuppers" value="7" min="1"></label>
+        <label>커피 수: <input type="number" id="numCoffees" value="4" min="1"></label>
+        <button onclick="generateTable()">테이블 생성</button>
+        <table>
+            <thead>
+                <tr id="headerRow"></tr>
+            </thead>
+            <tbody id="scores"></tbody>
+        </table>
+        <button onclick="calculate()">결과 보기</button>
+        <button onclick="saveData()">데이터 저장</button>
+        <button onclick="loadData()">데이터 불러오기</button>
+        <input type="file" id="fileInput" accept=".json">
+        <canvas id="chart"></canvas>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
