@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>로스팅 프로파일 기록</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb;
+  --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#6250d6;
+  --seq-light:#86b6ef; --seq-dark:#1c5cab;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19;
+    --ink:#f0efec; --ink-2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border: rgba(255,255,255,0.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9;
+    --seq-light:#3987e5; --seq-dark:#184f95;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page:#0d0d0d; --surface:#1a1a19;
+  --ink:#f0efec; --ink-2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border: rgba(255,255,255,0.10);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9;
+  --seq-light:#3987e5; --seq-dark:#184f95;
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--page); color:var(--ink); font-family: system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.5; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 22px; margin: 0 0 4px; }
+h2 { font-size: 16px; margin: 0 0 4px; }
+.sub { color: var(--ink-2); font-size: 14px; margin: 0 0 20px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.card p.cap { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+canvas { width: 100% !important; }
+.tall { height: 360px; } .mid { height: 260px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+th, td { padding: 6px 5px; border-bottom: 1px solid var(--grid); text-align: right; white-space: nowrap; }
+th { color: var(--ink-2); font-weight: 600; border-bottom: 1px solid var(--axis); }
+th:first-child, td:first-child { text-align: left; }
+td.name { font-weight: 600; }
+.sw { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; vertical-align:middle; }
+.tscroll { overflow-x: auto; }
+input[type=number], input[type=text] { background: var(--page); color: var(--ink); border: 1px solid var(--axis); border-radius: 4px; padding: 4px 6px; font: inherit; }
+input[type=number] { width: 64px; text-align: right; }
+input[type=text] { width: 150px; }
+button { background: var(--ink); color: var(--page); border: 0; border-radius: 6px; padding: 8px 14px; font: inherit; cursor: pointer; margin-right: 6px; }
+button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--axis); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+.row span { color: var(--muted); font-size: 13px; }
+.missing { color: var(--muted); }
+.legend-hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+ul.notes { margin: 8px 0 0; padding-left: 18px; font-size: 14px; color: var(--ink-2); }
+ul.notes li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>로스팅 프로파일 기록</h1>
+  <p class="sub">치훈 페르가미노 · 500g 배치 · 로스터 이호열 · 2026-10-21 기준 7건. 커핑 점수를 아래 표에 입력하면 저장되고, 산점도가 채워진다.</p>
+
+  <div class="card">
+    <h2>온도 곡선 (근사)</h2>
+    <p class="cap">투입 → 터닝포인트 → 배출, 기록된 3점을 잇는 근사 곡선. 실제 ROR 기록이 생기면 교체한다. 범례 클릭으로 숨기기/보이기.</p>
+    <div class="tall"><canvas id="curve"></canvas></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Agtron 홀빈 vs 그라운드</h2>
+      <p class="cap">두 막대의 간격이 클수록 겉과 속의 발현 차이가 크다.</p>
+      <div class="mid"><canvas id="agtron"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>Agtron 스프레드 (그라운드 − 홀빈)</h2>
+      <p class="cap">작을수록 속까지 고르게 익었다는 뜻. 1번(10/02)이 9.2로 가장 좁다.</p>
+      <div class="mid"><canvas id="spread"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>수분 손실률 (%)</h2>
+      <p class="cap">10/09 두 배치는 배출 무게가 기록되지 않았다.</p>
+      <div class="mid"><canvas id="loss"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>평균 ROR (°C/min, TP→배출)</h2>
+      <p class="cap">(배출온도 − TP온도) ÷ (배출시간 − TP시간).</p>
+      <div class="mid"><canvas id="ror"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>커핑 점수 vs 로스팅 변수</h2>
+    <p class="cap">점수를 입력한 배치만 찍힌다. X축을 바꿔가며 어떤 변수가 점수와 같이 움직이는지 본다.</p>
+    <div class="row" style="margin:0 0 8px">
+      <label>X축
+        <select id="xsel">
+          <option value="agtron_ground">Agtron 그라운드</option>
+          <option value="agtron_whole">Agtron 홀빈</option>
+          <option value="agtron_spread">Agtron 스프레드</option>
+          <option value="drop_temp">배출 온도</option>
+          <option value="drop_time_sec">배출 시간(초)</option>
+          <option value="avg_ror">평균 ROR</option>
+          <option value="weight_loss_pct">수분 손실률</option>
+        </select>
+      </label>
+    </div>
+    <div class="mid"><canvas id="scatter"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h2>전체 기록</h2>
+    <div class="tscroll">
+    <table id="tbl">
+      <thead><tr>
+        <th>배치</th><th>날짜</th><th>초반열</th><th>투입°C</th><th>TP°C</th><th>TP</th><th>배출</th><th>배출°C</th>
+        <th>투입g</th><th>배출g</th><th>손실%</th><th>ROR</th><th>홀빈</th><th>그라운드</th><th>스프레드</th><th>점수</th><th>커핑 노트</th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+    <div class="row">
+      <button id="save">점수 저장</button>
+      <button class="ghost" id="export">JSON 내보내기</button>
+      <button class="ghost" id="importBtn">JSON 불러오기</button>
+      <input type="file" id="file" accept=".json" style="display:none">
+      <span id="status"></span>
+    </div>
+    <ul class="notes">
+      <li>점수는 이 브라우저에만 저장된다. 공유하려면 JSON 내보내기로 파일을 남긴다.</li>
+      <li>다음 로스팅부터 추가로 기록할 것: 1차 크랙 시간·온도, 배출 무게(10/09 누락), 커핑 점수.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const SERIES = ['--s1','--s2','--s3','--s4','--s5','--s6','--s7'];
+const KEY = 'roasting-scores-v1';
+let DATA = null;
+
+function fmtTime(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+function fmt(v, d=1){ return v==null ? '—' : Number(v).toFixed(d); }
+
+function curvePoints(p){
+  const pts = [];
+  const tpT = p.tp_sec/60, dropT = p.drop_time_sec/60;
+  // 투입 → TP: 급강하
+  for (let t=0; t<=tpT; t+=tpT/6) {
+    const u = t/tpT;
+    pts.push({x:+t.toFixed(3), y:+(p.charge_temp - (p.charge_temp-p.tp_temp)*Math.sin(u*Math.PI/2)).toFixed(1)});
+  }
+  // TP → 배출: 감속 상승 (ROR 점감)
+  const n = 24;
+  for (let i=1;i<=n;i++){
+    const u = i/n, t = tpT + (dropT-tpT)*u;
+    const f = 1 - Math.pow(1-u, 1.6);
+    pts.push({x:+t.toFixed(3), y:+(p.tp_temp + (p.drop_temp-p.tp_temp)*f).toFixed(1)});
+  }
+  return pts;
+}
+
+function baseOpts(extra){
+  const ink=css('--ink-2'), grid=css('--grid'), axis=css('--axis');
+  return Object.assign({
+    responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ labels:{ color:ink, boxWidth:10, boxHeight:10, usePointStyle:true } }, tooltip:{ mode:'nearest', intersect:true } },
+    scales:{ x:{ ticks:{color:ink}, grid:{color:grid, drawTicks:false}, border:{color:axis} },
+             y:{ ticks:{color:ink}, grid:{color:grid, drawTicks:false}, border:{color:axis} } }
+  }, extra||{});
+}
+
+const charts = {};
+function render(){
+  const P = DATA.profiles;
+  const labels = P.map(p=>p.name);
+  const colors = P.map((_,i)=>css(SERIES[i]));
+  for (const k in charts) charts[k].destroy();
+
+  charts.curve = new Chart(document.getElementById('curve'), {
+    type:'line',
+    data:{ datasets: P.map((p,i)=>({ label:p.name, data:curvePoints(p), borderColor:colors[i], backgroundColor:colors[i],
+      borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.3 })) },
+    options: baseOpts({
+      interaction:{ mode:'index', intersect:false },
+      plugins:{ legend:{ position:'bottom', labels:{ color:css('--ink-2'), boxWidth:10, boxHeight:10, usePointStyle:true } },
+        tooltip:{ mode:'index', intersect:false, callbacks:{ title: it=>fmtTime(Math.round(it[0].parsed.x*60)), label: it=>` ${it.dataset.label}: ${it.parsed.y.toFixed(1)}°C` } } },
+      scales:{ x:{ type:'linear', min:0, max:8, title:{display:true,text:'시간 (분)',color:css('--muted')}, ticks:{color:css('--ink-2'), stepSize:1}, grid:{color:css('--grid')}, border:{color:css('--axis')} },
+               y:{ min:80, max:220, title:{display:true,text:'원두 온도 (°C)',color:css('--muted')}, ticks:{color:css('--ink-2')}, grid:{color:css('--grid')}, border:{color:css('--axis')} } }
+    })
+  });
+
+  const barBase = (data, color, labelText) => ({ label:labelText, data, backgroundColor:color, borderRadius:{topLeft:4,topRight:4}, borderSkipped:'bottom', maxBarThickness:28 });
+  const catX = { ticks:{color:css('--ink-2'), autoSkip:false, maxRotation:60, minRotation:40, font:{size:11}}, grid:{display:false}, border:{color:css('--axis')} };
+  const yAx = (min,max,text) => ({ min, max, title:{display:!!text,text,color:css('--muted')}, ticks:{color:css('--ink-2')}, grid:{color:css('--grid'), drawTicks:false}, border:{color:css('--axis')} });
+
+  charts.agtron = new Chart(document.getElementById('agtron'), {
+    type:'bar',
+    data:{ labels, datasets:[ barBase(P.map(p=>p.agtron_whole), css('--seq-dark'), '홀빈'), barBase(P.map(p=>p.agtron_ground), css('--seq-light'), '그라운드') ] },
+    options: baseOpts({ datasets:{ bar:{ categoryPercentage:0.7, barPercentage:0.9 } },
+      plugins:{ legend:{ position:'top', align:'end', labels:{color:css('--ink-2'), boxWidth:10, boxHeight:10, usePointStyle:true} },
+        tooltip:{ callbacks:{ afterBody: it=>'스프레드: '+P[it[0].dataIndex].agtron_spread } } },
+      scales:{ x:catX, y:yAx(0,110,'Agtron') } })
+  });
+
+  charts.spread = new Chart(document.getElementById('spread'), {
+    type:'bar',
+    data:{ labels, datasets:[ barBase(P.map(p=>p.agtron_spread), css('--s1'), '스프레드') ] },
+    options: baseOpts({ plugins:{ legend:{display:false} }, scales:{ x:catX, y:yAx(0,25,'그라운드 − 홀빈') } })
+  });
+
+  charts.loss = new Chart(document.getElementById('loss'), {
+    type:'bar',
+    data:{ labels, datasets:[ barBase(P.map(p=>p.weight_loss_pct), css('--s1'), '손실률') ] },
+    options: baseOpts({ plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: it=> it.parsed.y==null ? ' 기록 없음' : ' '+it.parsed.y.toFixed(1)+'%' } } }, scales:{ x:catX, y:yAx(0,14,'%') } })
+  });
+
+  charts.ror = new Chart(document.getElementById('ror'), {
+    type:'bar',
+    data:{ labels, datasets:[ barBase(P.map(p=>p.avg_ror), css('--s1'), '평균 ROR') ] },
+    options: baseOpts({ plugins:{ legend:{display:false} }, scales:{ x:catX, y:yAx(0,18,'°C/min') } })
+  });
+
+  renderScatter();
+}
+
+const XLABEL = { agtron_ground:'Agtron 그라운드', agtron_whole:'Agtron 홀빈', agtron_spread:'Agtron 스프레드', drop_temp:'배출 온도 (°C)', drop_time_sec:'배출 시간 (초)', avg_ror:'평균 ROR (°C/min)', weight_loss_pct:'수분 손실률 (%)' };
+function renderScatter(){
+  const P = DATA.profiles, xk = document.getElementById('xsel').value;
+  if (charts.scatter) charts.scatter.destroy();
+  const pts = P.map((p,i)=>({p,i})).filter(o=>o.p.cupping_score!=null && o.p[xk]!=null);
+  charts.scatter = new Chart(document.getElementById('scatter'), {
+    type:'scatter',
+    data:{ datasets: pts.map(o=>({ label:o.p.name, data:[{x:o.p[xk], y:o.p.cupping_score}], backgroundColor:css(SERIES[o.i]), pointRadius:7, pointHoverRadius:9, borderColor:css('--surface'), borderWidth:2 })) },
+    options: baseOpts({ plugins:{ legend:{ position:'bottom', labels:{color:css('--ink-2'), boxWidth:10, boxHeight:10, usePointStyle:true} },
+        tooltip:{ callbacks:{ label: it=>` ${it.dataset.label}: ${XLABEL[xk]} ${it.parsed.x}, 점수 ${it.parsed.y}` } } },
+      scales:{ x:{ title:{display:true,text:XLABEL[xk],color:css('--muted')}, ticks:{color:css('--ink-2')}, grid:{color:css('--grid')}, border:{color:css('--axis')} },
+               y:{ title:{display:true,text:'커핑 점수',color:css('--muted')}, suggestedMin:80, suggestedMax:90, ticks:{color:css('--ink-2')}, grid:{color:css('--grid')}, border:{color:css('--axis')} } } })
+  });
+  if (!pts.length) {
+    const c = charts.scatter.ctx; // 빈 상태 안내
+    charts.scatter.options.plugins.title = { display:true, text:'아직 커핑 점수가 없다. 표에서 입력하면 여기에 찍힌다.', color:css('--muted'), font:{weight:'normal'} };
+    charts.scatter.update();
+  }
+}
+
+function renderTable(){
+  const tb = document.querySelector('#tbl tbody'); tb.innerHTML='';
+  DATA.profiles.forEach((p,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="name"><span class="sw" style="background:${css(SERIES[i])}"></span>${p.name}</td>
+      <td>${p.date||'<span class="missing">미상</span>'}</td>
+      <td>${p.initial_heat??'<span class="missing">—</span>'}</td>
+      <td>${p.charge_temp}</td><td>${p.tp_temp}</td><td>0:${String(p.tp_sec).padStart(2,'0')}</td>
+      <td>${p.drop_time}</td><td>${p.drop_temp}</td>
+      <td>${p.charge_g}</td><td>${p.drop_g??'<span class="missing">—</span>'}</td><td>${fmt(p.weight_loss_pct)}</td>
+      <td>${fmt(p.avg_ror)}</td><td>${p.agtron_whole}</td><td>${p.agtron_ground}</td><td>${p.agtron_spread}</td>
+      <td><input type="number" step="0.25" min="60" max="100" data-i="${i}" data-k="cupping_score" value="${p.cupping_score??''}"></td>
+      <td style="text-align:left"><input type="text" data-i="${i}" data-k="cupping_note" value="${(p.cupping_note||'').replace(/"/g,'&quot;')}" placeholder="향미, 단맛, 결점"></td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function readInputs(){
+  document.querySelectorAll('#tbl input').forEach(el=>{
+    const p = DATA.profiles[+el.dataset.i];
+    if (el.dataset.k==='cupping_score') p.cupping_score = el.value==='' ? null : +el.value;
+    else p.cupping_note = el.value;
+  });
+}
+function setStatus(t){ document.getElementById('status').textContent = t; }
+
+function applySaved(){
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY)||'{}');
+    DATA.profiles.forEach(p=>{ if (saved[p.id]) Object.assign(p, saved[p.id]); });
+  } catch(e){}
+}
+
+document.getElementById('save').onclick = ()=>{
+  readInputs();
+  const out = {}; DATA.profiles.forEach(p=>{ out[p.id] = {cupping_score:p.cupping_score, cupping_note:p.cupping_note}; });
+  try { localStorage.setItem(KEY, JSON.stringify(out)); setStatus('저장됨 '+new Date().toLocaleTimeString('ko-KR')); } catch(e){ setStatus('저장 실패: 브라우저 저장소를 쓸 수 없다'); }
+  renderScatter();
+};
+document.getElementById('export').onclick = ()=>{
+  readInputs();
+  const blob = new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'roasting-profiles.json'; a.click();
+};
+document.getElementById('importBtn').onclick = ()=>document.getElementById('file').click();
+document.getElementById('file').onchange = e=>{
+  const f = e.target.files[0]; if (!f) return;
+  f.text().then(t=>{ const d = JSON.parse(t); if (!d.profiles) throw 0; DATA = d; renderTable(); render(); setStatus('불러옴: '+f.name); }).catch(()=>setStatus('JSON 형식이 맞지 않는다'));
+};
+document.getElementById('xsel').onchange = ()=>{ readInputs(); renderScatter(); };
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>{ readInputs(); renderTable(); render(); });
+
+fetch('profiles.json').then(r=>r.json()).then(d=>{ DATA=d; applySaved(); renderTable(); render(); })
+  .catch(()=>{ setStatus('profiles.json을 불러오지 못했다. 로컬 서버(python3 -m http.server)로 열어야 한다.'); });
+</script>
+</body>
+</html>
