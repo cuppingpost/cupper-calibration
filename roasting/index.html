@@ -11,8 +11,8 @@
   --page: #f9f9f7; --surface: #fcfcfb;
   --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
   --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
-  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#6250d6;
-  --seq-light:#86b6ef; --seq-dark:#1c5cab;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#6250d6; --s8:#e34948;
+  --seq-light:#86b6ef; --seq-dark:#1c5cab; --est:#b7d3f6;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -20,8 +20,8 @@
     --page:#0d0d0d; --surface:#1a1a19;
     --ink:#f0efec; --ink-2:#c3c2b7; --muted:#898781;
     --grid:#2c2c2a; --axis:#383835; --border: rgba(255,255,255,0.10);
-    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9;
-    --seq-light:#3987e5; --seq-dark:#184f95;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
+    --seq-light:#3987e5; --seq-dark:#184f95; --est:#256abf;
   }
 }
 :root[data-theme="dark"] {
@@ -29,37 +29,41 @@
   --page:#0d0d0d; --surface:#1a1a19;
   --ink:#f0efec; --ink-2:#c3c2b7; --muted:#898781;
   --grid:#2c2c2a; --axis:#383835; --border: rgba(255,255,255,0.10);
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9;
-  --seq-light:#3987e5; --seq-dark:#184f95;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
+  --seq-light:#3987e5; --seq-dark:#184f95; --est:#256abf;
 }
 * { box-sizing: border-box; }
 body { margin:0; background:var(--page); color:var(--ink); font-family: system-ui,-apple-system,"Segoe UI",sans-serif; line-height:1.5; }
-.wrap { max-width: 1040px; margin: 0 auto; padding: 24px 16px 64px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
 h1 { font-size: 22px; margin: 0 0 4px; }
 h2 { font-size: 16px; margin: 0 0 4px; }
-.sub { color: var(--ink-2); font-size: 14px; margin: 0 0 20px; }
+.sub { color: var(--ink-2); font-size: 14px; margin: 0 0 16px; }
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
 .card p.cap { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
 canvas { width: 100% !important; }
-.tall { height: 360px; } .mid { height: 260px; }
+.tall { height: 360px; } .mid { height: 280px; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
 th, td { padding: 6px 5px; border-bottom: 1px solid var(--grid); text-align: right; white-space: nowrap; }
-th { color: var(--ink-2); font-weight: 600; border-bottom: 1px solid var(--axis); }
-th:first-child, td:first-child { text-align: left; }
+th { color: var(--ink-2); font-weight: 600; border-bottom: 1px solid var(--axis); position: sticky; top: 0; background: var(--surface); }
+th:first-child, td:first-child, td.l { text-align: left; }
 td.name { font-weight: 600; }
 .sw { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:6px; vertical-align:middle; }
-.tscroll { overflow-x: auto; }
+.tscroll { overflow-x: auto; max-height: 560px; overflow-y: auto; }
 input[type=number], input[type=text] { background: var(--page); color: var(--ink); border: 1px solid var(--axis); border-radius: 4px; padding: 4px 6px; font: inherit; }
 input[type=number] { width: 64px; text-align: right; }
 input[type=text] { width: 150px; }
 button { background: var(--ink); color: var(--page); border: 0; border-radius: 6px; padding: 8px 14px; font: inherit; cursor: pointer; margin-right: 6px; }
 button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--axis); }
+.filters { display:flex; gap:6px; margin: 0 0 16px; flex-wrap: wrap; }
+.filters button { padding: 6px 12px; font-size: 13px; }
+.filters button[aria-pressed="false"] { background: transparent; color: var(--ink); border: 1px solid var(--axis); }
 .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
 .row span { color: var(--muted); font-size: 13px; }
 .missing { color: var(--muted); }
-.legend-hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+.est { color: var(--ink-2); font-style: italic; }
+.tag { display:inline-block; font-size: 11px; padding: 1px 6px; border-radius: 10px; border: 1px solid var(--axis); color: var(--ink-2); margin-left: 4px; }
 ul.notes { margin: 8px 0 0; padding-left: 18px; font-size: 14px; color: var(--ink-2); }
 ul.notes li { margin-bottom: 4px; }
 </style>
@@ -67,32 +71,47 @@ ul.notes li { margin-bottom: 4px; }
 <body>
 <div class="wrap">
   <h1>로스팅 프로파일 기록</h1>
-  <p class="sub">치훈 페르가미노 · 500g 배치 · 로스터 이호열 · 2026-10-21 기준 7건. 커핑 점수를 아래 표에 입력하면 저장되고, 산점도가 채워진다.</p>
+  <p class="sub" id="subtitle">로링(500g) · 링크(50g) · 2026-10-25 기준. 링크 배치는 무게가 없어 감소율을 추정값으로 채웠다. 점수는 아래 표에 입력한다.</p>
+
+  <div class="filters" id="filters">
+    <button data-m="all" aria-pressed="true">전체</button>
+    <button data-m="로링" aria-pressed="false">로링 500g</button>
+    <button data-m="링크" aria-pressed="false">링크 50g</button>
+  </div>
 
   <div class="card">
-    <h2>온도 곡선 (근사)</h2>
-    <p class="cap">투입 → 터닝포인트 → 배출, 기록된 3점을 잇는 근사 곡선. 실제 ROR 기록이 생기면 교체한다. 범례 클릭으로 숨기기/보이기.</p>
-    <div class="tall"><canvas id="curve"></canvas></div>
+    <h2>무게 감소율 (%) · 실측 vs 추정</h2>
+    <p class="cap">진한 막대는 실측, 연한 빗금 막대는 추정. 추정은 같은 커피의 로링 실측을 기준으로 Agtron 차이와 로스팅 시간을 보정한 경험칙이고, 오차 ±1.5%p. 링크에서 무게를 재면 교체한다.</p>
+    <div class="mid"><canvas id="loss"></canvas></div>
   </div>
 
   <div class="grid2">
     <div class="card">
       <h2>Agtron 홀빈 vs 그라운드</h2>
-      <p class="cap">두 막대의 간격이 클수록 겉과 속의 발현 차이가 크다.</p>
+      <p class="cap">두 막대의 간격(스프레드)이 클수록 겉과 속의 발현 차이가 크다.</p>
       <div class="mid"><canvas id="agtron"></canvas></div>
     </div>
     <div class="card">
+      <h2>실측 감소율 vs Agtron 그라운드</h2>
+      <p class="cap">실측이 있는 로링 배치만. 이 범위에서는 둘 사이에 관계가 거의 없다. 감소율은 로스팅 정도보다 콩의 수분·밀도를 따라간다.</p>
+      <div class="mid"><canvas id="lossAgtron"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>온도 곡선 (근사) · 로링</h2>
+    <p class="cap">투입 → 터닝포인트 → 배출, 기록된 3점을 잇는 근사 곡선. 링크는 온도 기록이 없어 빠진다. 범례 클릭으로 숨기기/보이기.</p>
+    <div class="tall"><canvas id="curve"></canvas></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
       <h2>Agtron 스프레드 (그라운드 − 홀빈)</h2>
-      <p class="cap">작을수록 속까지 고르게 익었다는 뜻. 1번(10/02)이 9.2로 가장 좁다.</p>
+      <p class="cap">작을수록 속까지 고르게 익었다는 뜻.</p>
       <div class="mid"><canvas id="spread"></canvas></div>
     </div>
     <div class="card">
-      <h2>수분 손실률 (%)</h2>
-      <p class="cap">10/09 두 배치는 배출 무게가 기록되지 않았다.</p>
-      <div class="mid"><canvas id="loss"></canvas></div>
-    </div>
-    <div class="card">
-      <h2>평균 ROR (°C/min, TP→배출)</h2>
+      <h2>평균 ROR (°C/min, TP→배출) · 로링</h2>
       <p class="cap">(배출온도 − TP온도) ÷ (배출시간 − TP시간).</p>
       <div class="mid"><canvas id="ror"></canvas></div>
     </div>
@@ -104,13 +123,13 @@ ul.notes li { margin-bottom: 4px; }
     <div class="row" style="margin:0 0 8px">
       <label>X축
         <select id="xsel">
+          <option value="loss_any">무게 감소율 (실측 또는 추정)</option>
           <option value="agtron_ground">Agtron 그라운드</option>
           <option value="agtron_whole">Agtron 홀빈</option>
           <option value="agtron_spread">Agtron 스프레드</option>
+          <option value="total_sec">총 로스팅 시간(초)</option>
           <option value="drop_temp">배출 온도</option>
-          <option value="drop_time_sec">배출 시간(초)</option>
           <option value="avg_ror">평균 ROR</option>
-          <option value="weight_loss_pct">수분 손실률</option>
         </select>
       </label>
     </div>
@@ -122,8 +141,8 @@ ul.notes li { margin-bottom: 4px; }
     <div class="tscroll">
     <table id="tbl">
       <thead><tr>
-        <th>배치</th><th>날짜</th><th>초반열</th><th>투입°C</th><th>TP°C</th><th>TP</th><th>배출</th><th>배출°C</th>
-        <th>투입g</th><th>배출g</th><th>손실%</th><th>ROR</th><th>홀빈</th><th>그라운드</th><th>스프레드</th><th>점수</th><th>커핑 노트</th>
+        <th>배치</th><th>날짜</th><th>소유</th><th>커피</th><th>머신</th><th>투입g</th><th>배출g</th><th>감소%</th><th>추정%</th>
+        <th>시간</th><th>초반열</th><th>투입°C</th><th>TP°C</th><th>배출°C</th><th>ROR</th><th>홀빈</th><th>그라운드</th><th>스프레드</th><th>점수</th><th>커핑 노트</th>
       </tr></thead>
       <tbody></tbody>
     </table>
@@ -132,161 +151,180 @@ ul.notes li { margin-bottom: 4px; }
       <button id="save">점수 저장</button>
       <button class="ghost" id="export">JSON 내보내기</button>
       <button class="ghost" id="importBtn">JSON 불러오기</button>
+      <a class="ghost" href="profiles.csv" download style="padding:8px 14px;border:1px solid var(--axis);border-radius:6px;color:var(--ink);text-decoration:none;font-size:14px">CSV</a>
       <input type="file" id="file" accept=".json" style="display:none">
       <span id="status"></span>
     </div>
     <ul class="notes">
       <li>점수는 이 브라우저에만 저장된다. 공유하려면 JSON 내보내기로 파일을 남긴다.</li>
-      <li>다음 로스팅부터 추가로 기록할 것: 1차 크랙 시간·온도, 배출 무게(10/09 누락), 커핑 점수.</li>
+      <li>링크 50g 배치: 투입·배출 무게를 0.1g 단위로 재면 추정 열이 실측으로 바뀐다.</li>
+      <li>다음부터 기록할 것: 1차 크랙 시간·온도, 커핑 점수, 화력 변경 시점.</li>
     </ul>
   </div>
 </div>
 
 <script>
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-const SERIES = ['--s1','--s2','--s3','--s4','--s5','--s6','--s7'];
-const KEY = 'roasting-scores-v1';
-let DATA = null;
+const SERIES = ['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'];
+const KEY = 'roasting-scores-v2';
+let DATA = null, FILTER = 'all';
+const charts = {};
 
 function fmtTime(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
 function fmt(v, d=1){ return v==null ? '—' : Number(v).toFixed(d); }
+function visible(){ return DATA.profiles.filter(p => FILTER==='all' || p.machine===FILTER); }
+function loringIndex(p){ return DATA.profiles.filter(q=>q.machine==='로링').indexOf(p); }
+function colorOf(p){ const i = loringIndex(p); return i>=0 ? css(SERIES[i % SERIES.length]) : css('--muted'); }
+
+// 빗금 패턴 (추정값 표시용)
+function hatch(color){
+  const c = document.createElement('canvas'); c.width = c.height = 8;
+  const g = c.getContext('2d'); g.strokeStyle = color; g.lineWidth = 2;
+  g.beginPath(); g.moveTo(-2,10); g.lineTo(10,-2); g.moveTo(-2,2); g.lineTo(2,-2); g.moveTo(6,10); g.lineTo(10,6); g.stroke();
+  return g.createPattern(c,'repeat');
+}
 
 function curvePoints(p){
-  const pts = [];
-  const tpT = p.tp_sec/60, dropT = p.drop_time_sec/60;
-  // 투입 → TP: 급강하
-  for (let t=0; t<=tpT; t+=tpT/6) {
+  const pts = [], tpT = p.tp_sec/60, dropT = p.total_sec/60;
+  for (let t=0; t<=tpT+1e-9; t+=tpT/6) {
     const u = t/tpT;
     pts.push({x:+t.toFixed(3), y:+(p.charge_temp - (p.charge_temp-p.tp_temp)*Math.sin(u*Math.PI/2)).toFixed(1)});
   }
-  // TP → 배출: 감속 상승 (ROR 점감)
   const n = 24;
   for (let i=1;i<=n;i++){
-    const u = i/n, t = tpT + (dropT-tpT)*u;
-    const f = 1 - Math.pow(1-u, 1.6);
+    const u = i/n, t = tpT + (dropT-tpT)*u, f = 1 - Math.pow(1-u, 1.6);
     pts.push({x:+t.toFixed(3), y:+(p.tp_temp + (p.drop_temp-p.tp_temp)*f).toFixed(1)});
   }
   return pts;
 }
 
-function baseOpts(extra){
-  const ink=css('--ink-2'), grid=css('--grid'), axis=css('--axis');
-  return Object.assign({
-    responsive:true, maintainAspectRatio:false,
-    plugins:{ legend:{ labels:{ color:ink, boxWidth:10, boxHeight:10, usePointStyle:true } }, tooltip:{ mode:'nearest', intersect:true } },
-    scales:{ x:{ ticks:{color:ink}, grid:{color:grid, drawTicks:false}, border:{color:axis} },
-             y:{ ticks:{color:ink}, grid:{color:grid, drawTicks:false}, border:{color:axis} } }
-  }, extra||{});
-}
+function ax(opts){ return Object.assign({ ticks:{color:css('--ink-2')}, grid:{color:css('--grid'), drawTicks:false}, border:{color:css('--axis')} }, opts||{}); }
+function catX(){ return { ticks:{color:css('--ink-2'), autoSkip:false, maxRotation:60, minRotation:45, font:{size:11}}, grid:{display:false}, border:{color:css('--axis')} }; }
+function yAx(min,max,text){ return ax({ min, max, title:{display:!!text,text,color:css('--muted')} }); }
+function legend(pos){ return { position:pos||'top', align: pos==='bottom'?'center':'end', labels:{ color:css('--ink-2'), boxWidth:10, boxHeight:10, usePointStyle:true } }; }
+function base(extra){ return Object.assign({ responsive:true, maintainAspectRatio:false, animation:false }, extra||{}); }
+const bar = (label, data, bg, extra) => Object.assign({ label, data, backgroundColor:bg, borderRadius:{topLeft:4,topRight:4}, borderSkipped:'bottom', maxBarThickness:26 }, extra||{});
 
-const charts = {};
 function render(){
-  const P = DATA.profiles;
-  const labels = P.map(p=>p.name);
-  const colors = P.map((_,i)=>css(SERIES[i]));
-  for (const k in charts) charts[k].destroy();
+  for (const k in charts) { charts[k].destroy(); delete charts[k]; }
+  const V = visible(), labels = V.map(p=>p.name);
+  const LR = DATA.profiles.filter(p=>p.machine==='로링');
+  const LRv = V.filter(p=>p.machine==='로링');
 
-  charts.curve = new Chart(document.getElementById('curve'), {
-    type:'line',
-    data:{ datasets: P.map((p,i)=>({ label:p.name, data:curvePoints(p), borderColor:colors[i], backgroundColor:colors[i],
-      borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.3 })) },
-    options: baseOpts({
-      interaction:{ mode:'index', intersect:false },
-      plugins:{ legend:{ position:'bottom', labels:{ color:css('--ink-2'), boxWidth:10, boxHeight:10, usePointStyle:true } },
-        tooltip:{ mode:'index', intersect:false, callbacks:{ title: it=>fmtTime(Math.round(it[0].parsed.x*60)), label: it=>` ${it.dataset.label}: ${it.parsed.y.toFixed(1)}°C` } } },
-      scales:{ x:{ type:'linear', min:0, max:8, title:{display:true,text:'시간 (분)',color:css('--muted')}, ticks:{color:css('--ink-2'), stepSize:1}, grid:{color:css('--grid')}, border:{color:css('--axis')} },
-               y:{ min:80, max:220, title:{display:true,text:'원두 온도 (°C)',color:css('--muted')}, ticks:{color:css('--ink-2')}, grid:{color:css('--grid')}, border:{color:css('--axis')} } }
-    })
+  // 감소율: 실측 vs 추정
+  charts.loss = new Chart(document.getElementById('loss'), {
+    type:'bar',
+    data:{ labels, datasets:[
+      bar('실측', V.map(p=>p.loss_measured), css('--s1')),
+      bar('추정', V.map(p=>p.loss_est), hatch(css('--s1')), { borderColor: css('--s1'), borderWidth:1 }) ] },
+    options: base({ datasets:{ bar:{ categoryPercentage:0.6, barPercentage:1 } }, interaction:{ mode:'index', intersect:false },
+      plugins:{ legend: legend('top'), tooltip:{ mode:'index', intersect:false, callbacks:{
+        label: it => { const p=V[it.dataIndex]; if (it.parsed.y==null) return null;
+          return it.datasetIndex===0 ? ` 실측 ${p.loss_measured}%  (${p.charge_g}g → ${p.drop_g}g)` : ` 추정 ${p.loss_est}%  (범위 ${p.loss_est_low}–${p.loss_est_high})`; },
+        afterBody: it => { const p=V[it[0].dataIndex]; return p.loss_est_basis ? [p.loss_est_basis] : []; } } } },
+      scales:{ x:catX(), y:yAx(0,15,'%') } })
   });
-
-  const barBase = (data, color, labelText) => ({ label:labelText, data, backgroundColor:color, borderRadius:{topLeft:4,topRight:4}, borderSkipped:'bottom', maxBarThickness:28 });
-  const catX = { ticks:{color:css('--ink-2'), autoSkip:false, maxRotation:60, minRotation:40, font:{size:11}}, grid:{display:false}, border:{color:css('--axis')} };
-  const yAx = (min,max,text) => ({ min, max, title:{display:!!text,text,color:css('--muted')}, ticks:{color:css('--ink-2')}, grid:{color:css('--grid'), drawTicks:false}, border:{color:css('--axis')} });
+  // 겹침 방지: 실측/추정은 한 배치에 하나만 있으므로 같은 자리에 그린다
+  charts.loss.options.datasets.bar.categoryPercentage = 0.6;
+  charts.loss.data.datasets.forEach(d=>{ d.grouped=false; }); charts.loss.update();
 
   charts.agtron = new Chart(document.getElementById('agtron'), {
     type:'bar',
-    data:{ labels, datasets:[ barBase(P.map(p=>p.agtron_whole), css('--seq-dark'), '홀빈'), barBase(P.map(p=>p.agtron_ground), css('--seq-light'), '그라운드') ] },
-    options: baseOpts({ datasets:{ bar:{ categoryPercentage:0.7, barPercentage:0.9 } },
-      plugins:{ legend:{ position:'top', align:'end', labels:{color:css('--ink-2'), boxWidth:10, boxHeight:10, usePointStyle:true} },
-        tooltip:{ callbacks:{ afterBody: it=>'스프레드: '+P[it[0].dataIndex].agtron_spread } } },
-      scales:{ x:catX, y:yAx(0,110,'Agtron') } })
+    data:{ labels, datasets:[ bar('홀빈', V.map(p=>p.agtron_whole), css('--seq-dark')), bar('그라운드', V.map(p=>p.agtron_ground), css('--seq-light')) ] },
+    options: base({ datasets:{ bar:{ categoryPercentage:0.7, barPercentage:0.9 } },
+      plugins:{ legend: legend('top'), tooltip:{ callbacks:{ afterBody: it=>'스프레드: '+V[it[0].dataIndex].agtron_spread } } },
+      scales:{ x:catX(), y:yAx(0,110,'Agtron') } })
+  });
+
+  const meas = LR.filter(p=>p.loss_measured!=null);
+  charts.lossAgtron = new Chart(document.getElementById('lossAgtron'), {
+    type:'scatter',
+    data:{ datasets:[{ label:'로링 실측', data: meas.map(p=>({x:p.agtron_ground, y:p.loss_measured, name:p.name})), backgroundColor: meas.map(colorOf), pointRadius:7, pointHoverRadius:9, borderColor:css('--surface'), borderWidth:2 }] },
+    options: base({ plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: it=>` ${it.raw.name}: Agtron ${it.parsed.x}, ${it.parsed.y}%` } } },
+      scales:{ x:ax({ title:{display:true,text:'Agtron 그라운드',color:css('--muted')}, min:80, max:105 }), y:ax({ title:{display:true,text:'감소율 (%)',color:css('--muted')}, min:6, max:14 }) } })
+  });
+
+  charts.curve = new Chart(document.getElementById('curve'), {
+    type:'line',
+    data:{ datasets: LRv.map(p=>({ label:p.name, data:curvePoints(p), borderColor:colorOf(p), backgroundColor:colorOf(p), borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.3 })) },
+    options: base({ interaction:{ mode:'index', intersect:false },
+      plugins:{ legend: legend('bottom'), tooltip:{ mode:'index', intersect:false, callbacks:{ title: it=>fmtTime(Math.round(it[0].parsed.x*60)), label: it=>` ${it.dataset.label}: ${it.parsed.y.toFixed(1)}°C` } } },
+      scales:{ x:ax({ type:'linear', min:0, max:8, title:{display:true,text:'시간 (분)',color:css('--muted')}, ticks:{color:css('--ink-2'), stepSize:1} }),
+               y:ax({ min:80, max:220, title:{display:true,text:'원두 온도 (°C)',color:css('--muted')} }) } })
   });
 
   charts.spread = new Chart(document.getElementById('spread'), {
-    type:'bar',
-    data:{ labels, datasets:[ barBase(P.map(p=>p.agtron_spread), css('--s1'), '스프레드') ] },
-    options: baseOpts({ plugins:{ legend:{display:false} }, scales:{ x:catX, y:yAx(0,25,'그라운드 − 홀빈') } })
+    type:'bar', data:{ labels, datasets:[ bar('스프레드', V.map(p=>p.agtron_spread), css('--s1')) ] },
+    options: base({ plugins:{ legend:{display:false} }, scales:{ x:catX(), y:yAx(0,25,'그라운드 − 홀빈') } })
   });
-
-  charts.loss = new Chart(document.getElementById('loss'), {
-    type:'bar',
-    data:{ labels, datasets:[ barBase(P.map(p=>p.weight_loss_pct), css('--s1'), '손실률') ] },
-    options: baseOpts({ plugins:{ legend:{display:false}, tooltip:{ callbacks:{ label: it=> it.parsed.y==null ? ' 기록 없음' : ' '+it.parsed.y.toFixed(1)+'%' } } }, scales:{ x:catX, y:yAx(0,14,'%') } })
-  });
-
   charts.ror = new Chart(document.getElementById('ror'), {
-    type:'bar',
-    data:{ labels, datasets:[ barBase(P.map(p=>p.avg_ror), css('--s1'), '평균 ROR') ] },
-    options: baseOpts({ plugins:{ legend:{display:false} }, scales:{ x:catX, y:yAx(0,18,'°C/min') } })
+    type:'bar', data:{ labels: LRv.map(p=>p.name), datasets:[ bar('평균 ROR', LRv.map(p=>p.avg_ror), css('--s1')) ] },
+    options: base({ plugins:{ legend:{display:false} }, scales:{ x:catX(), y:yAx(0,18,'°C/min') } })
   });
-
   renderScatter();
 }
 
-const XLABEL = { agtron_ground:'Agtron 그라운드', agtron_whole:'Agtron 홀빈', agtron_spread:'Agtron 스프레드', drop_temp:'배출 온도 (°C)', drop_time_sec:'배출 시간 (초)', avg_ror:'평균 ROR (°C/min)', weight_loss_pct:'수분 손실률 (%)' };
+const XLABEL = { loss_any:'무게 감소율 (%)', agtron_ground:'Agtron 그라운드', agtron_whole:'Agtron 홀빈', agtron_spread:'Agtron 스프레드', total_sec:'총 로스팅 시간 (초)', drop_temp:'배출 온도 (°C)', avg_ror:'평균 ROR (°C/min)' };
+function xval(p, k){ return k==='loss_any' ? (p.loss_measured ?? p.loss_est) : p[k]; }
 function renderScatter(){
-  const P = DATA.profiles, xk = document.getElementById('xsel').value;
+  const xk = document.getElementById('xsel').value;
   if (charts.scatter) charts.scatter.destroy();
-  const pts = P.map((p,i)=>({p,i})).filter(o=>o.p.cupping_score!=null && o.p[xk]!=null);
+  const pts = visible().filter(p=>p.cupping_score!=null && xval(p,xk)!=null);
   charts.scatter = new Chart(document.getElementById('scatter'), {
     type:'scatter',
-    data:{ datasets: pts.map(o=>({ label:o.p.name, data:[{x:o.p[xk], y:o.p.cupping_score}], backgroundColor:css(SERIES[o.i]), pointRadius:7, pointHoverRadius:9, borderColor:css('--surface'), borderWidth:2 })) },
-    options: baseOpts({ plugins:{ legend:{ position:'bottom', labels:{color:css('--ink-2'), boxWidth:10, boxHeight:10, usePointStyle:true} },
-        tooltip:{ callbacks:{ label: it=>` ${it.dataset.label}: ${XLABEL[xk]} ${it.parsed.x}, 점수 ${it.parsed.y}` } } },
-      scales:{ x:{ title:{display:true,text:XLABEL[xk],color:css('--muted')}, ticks:{color:css('--ink-2')}, grid:{color:css('--grid')}, border:{color:css('--axis')} },
-               y:{ title:{display:true,text:'커핑 점수',color:css('--muted')}, suggestedMin:80, suggestedMax:90, ticks:{color:css('--ink-2')}, grid:{color:css('--grid')}, border:{color:css('--axis')} } } })
+    data:{ datasets:[
+      { label:'로링', data: pts.filter(p=>p.machine==='로링').map(p=>({x:xval(p,xk), y:p.cupping_score, name:p.name})), backgroundColor:css('--s1'), pointRadius:7, pointHoverRadius:9, borderColor:css('--surface'), borderWidth:2 },
+      { label:'링크', data: pts.filter(p=>p.machine==='링크').map(p=>({x:xval(p,xk), y:p.cupping_score, name:p.name})), backgroundColor:css('--s2'), pointStyle:'triangle', pointRadius:8, pointHoverRadius:10, borderColor:css('--surface'), borderWidth:2 } ] },
+    options: base({ plugins:{ legend: legend('bottom'), tooltip:{ callbacks:{ label: it=>` ${it.raw.name}: ${XLABEL[xk]} ${it.parsed.x}, 점수 ${it.parsed.y}` } },
+        title:{ display: pts.length===0, text:'아직 커핑 점수가 없다. 표에서 입력하면 여기에 찍힌다.', color:css('--muted'), font:{weight:'normal'} } },
+      scales:{ x:ax({ title:{display:true,text:XLABEL[xk],color:css('--muted')} }), y:ax({ title:{display:true,text:'커핑 점수',color:css('--muted')}, suggestedMin:80, suggestedMax:90 }) } })
   });
-  if (!pts.length) {
-    const c = charts.scatter.ctx; // 빈 상태 안내
-    charts.scatter.options.plugins.title = { display:true, text:'아직 커핑 점수가 없다. 표에서 입력하면 여기에 찍힌다.', color:css('--muted'), font:{weight:'normal'} };
-    charts.scatter.update();
-  }
 }
 
 function renderTable(){
   const tb = document.querySelector('#tbl tbody'); tb.innerHTML='';
+  const dash = '<span class="missing">—</span>';
   DATA.profiles.forEach((p,i)=>{
-    const tr = document.createElement('tr');
+    const tr = document.createElement('tr'); tr.dataset.machine = p.machine;
+    const sw = p.machine==='로링' ? `<span class="sw" style="background:${colorOf(p)}"></span>` : '<span class="sw" style="border:1px solid var(--axis)"></span>';
     tr.innerHTML = `
-      <td class="name"><span class="sw" style="background:${css(SERIES[i])}"></span>${p.name}</td>
+      <td class="name">${sw}${p.name}</td>
       <td>${p.date||'<span class="missing">미상</span>'}</td>
-      <td>${p.initial_heat??'<span class="missing">—</span>'}</td>
-      <td>${p.charge_temp}</td><td>${p.tp_temp}</td><td>0:${String(p.tp_sec).padStart(2,'0')}</td>
-      <td>${p.drop_time}</td><td>${p.drop_temp}</td>
-      <td>${p.charge_g}</td><td>${p.drop_g??'<span class="missing">—</span>'}</td><td>${fmt(p.weight_loss_pct)}</td>
+      <td class="l">${p.owner}</td>
+      <td class="l">${p.coffee}${p.bean_note?`<span class="tag">${p.bean_note}</span>`:''}</td>
+      <td class="l">${p.machine}</td>
+      <td>${p.charge_g??dash}</td><td>${p.drop_g??dash}</td>
+      <td>${p.loss_measured!=null?('<b>'+fmt(p.loss_measured)+'</b>'):dash}</td>
+      <td>${p.loss_est!=null?('<span class="est" title="'+p.loss_est_basis+'">'+fmt(p.loss_est)+'</span>'):dash}</td>
+      <td>${p.total_time}</td>
+      <td>${p.initial_heat??dash}</td><td>${p.charge_temp??dash}</td><td>${p.tp_temp??dash}</td><td>${p.drop_temp??dash}</td>
       <td>${fmt(p.avg_ror)}</td><td>${p.agtron_whole}</td><td>${p.agtron_ground}</td><td>${p.agtron_spread}</td>
       <td><input type="number" step="0.25" min="60" max="100" data-i="${i}" data-k="cupping_score" value="${p.cupping_score??''}"></td>
-      <td style="text-align:left"><input type="text" data-i="${i}" data-k="cupping_note" value="${(p.cupping_note||'').replace(/"/g,'&quot;')}" placeholder="향미, 단맛, 결점"></td>`;
+      <td class="l"><input type="text" data-i="${i}" data-k="cupping_note" value="${(p.cupping_note||'').replace(/"/g,'&quot;')}" placeholder="향미, 단맛, 결점"></td>`;
     tb.appendChild(tr);
   });
+  applyFilterToTable();
 }
-
+function applyFilterToTable(){
+  document.querySelectorAll('#tbl tbody tr').forEach(tr=>{ tr.style.display = (FILTER==='all' || tr.dataset.machine===FILTER) ? '' : 'none'; });
+}
 function readInputs(){
   document.querySelectorAll('#tbl input').forEach(el=>{
     const p = DATA.profiles[+el.dataset.i];
-    if (el.dataset.k==='cupping_score') p.cupping_score = el.value==='' ? null : +el.value;
-    else p.cupping_note = el.value;
+    if (el.dataset.k==='cupping_score') p.cupping_score = el.value==='' ? null : +el.value; else p.cupping_note = el.value;
   });
 }
 function setStatus(t){ document.getElementById('status').textContent = t; }
-
 function applySaved(){
-  try {
-    const saved = JSON.parse(localStorage.getItem(KEY)||'{}');
-    DATA.profiles.forEach(p=>{ if (saved[p.id]) Object.assign(p, saved[p.id]); });
-  } catch(e){}
+  try { const saved = JSON.parse(localStorage.getItem(KEY)||'{}'); DATA.profiles.forEach(p=>{ if (saved[p.id]) Object.assign(p, saved[p.id]); }); } catch(e){}
 }
 
+document.getElementById('filters').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if (!b) return;
+  FILTER = b.dataset.m;
+  document.querySelectorAll('#filters button').forEach(x=>x.setAttribute('aria-pressed', x===b ? 'true':'false'));
+  readInputs(); applyFilterToTable(); render();
+});
 document.getElementById('save').onclick = ()=>{
   readInputs();
   const out = {}; DATA.profiles.forEach(p=>{ out[p.id] = {cupping_score:p.cupping_score, cupping_note:p.cupping_note}; });
