@@ -78,7 +78,7 @@ ul.notes li { margin-bottom: 4px; }
 <body>
 <div class="wrap">
   <h1>로스팅 프로파일 기록</h1>
-  <p class="sub" id="subtitle">로링(500g) · 링크(50g) · 2026-10-25 기준. 타겟: 링크 1번 프로파일 50g → 44.9g (10.2%). 링크 배치는 무게가 없어 감소율을 추정값으로 채웠다. 10/25 인상: 페르가미노 워시드 링크 말고는 거의 다 라이트. 점수는 아래 표에 입력한다.</p>
+  <p class="sub" id="subtitle">로링(500g) · 링크(50g) · 2026-10-25 기준. 타겟: 링크 1번 프로파일 50g → 44.9g (10.2%), 44.5g 이하는 애매, 더 밝은 쪽은 괜찮을 수도. 링크 배치는 무게가 없어 감소율을 추정값으로 채웠다. 10/25 인상: 페르가미노 워시드 링크 말고는 거의 다 라이트. 점수는 아래 표에 입력한다.</p>
 
   <div class="filters" id="filters">
     <button data-m="all" aria-pressed="true">전체</button>
@@ -99,7 +99,7 @@ ul.notes li { margin-bottom: 4px; }
 
   <div class="card">
     <h2>무게 감소율 (%) · 실측 vs 추정</h2>
-    <p class="cap">진한 막대는 실측, 연한 빗금 막대는 추정. 추정은 같은 커피의 로링 실측을 기준으로 Agtron 차이와 로스팅 시간을 보정한 경험칙이고, 오차 ±1.5%p. 링크에서 무게를 재면 교체한다.</p>
+    <p class="cap">진한 막대는 실측, 연한 빗금 막대는 추정. 주황 점선이 타겟, 그 위 옅은 띠가 애매해지는 구간. 추정은 같은 커피의 로링 실측을 기준으로 Agtron 차이와 로스팅 시간을 보정한 경험칙이고, 오차 ±1.5%p. 링크에서 무게를 재면 교체한다.</p>
     <div class="mid"><canvas id="loss"></canvas></div>
   </div>
 
@@ -188,10 +188,16 @@ const KEY = 'roasting-scores-v2';
 let DATA = null, FILTER = 'all';
 const charts = {};
 const targetLine = { id:'targetLine', afterDatasetsDraw(c){ const t = DATA.meta && DATA.meta.target; if(!t) return;
-  const y = c.scales.y.getPixelForValue(t.loss_pct), g = c.ctx, a = c.chartArea;
-  g.save(); g.strokeStyle = css('--s2'); g.lineWidth = 2; g.setLineDash([6,4]); g.beginPath(); g.moveTo(a.left,y); g.lineTo(a.right,y); g.stroke();
-  g.setLineDash([]); g.fillStyle = css('--ink-2'); g.font = '12px system-ui, sans-serif'; g.textAlign='right'; g.textBaseline='bottom';
-  g.fillText('타겟 '+t.loss_pct+'% (링크 1번, 50→44.9g)', a.right-4, y-3); g.restore(); } };
+  const g = c.ctx, a = c.chartArea, y1 = c.scales.y.getPixelForValue(t.loss_pct), y2 = c.scales.y.getPixelForValue(t.loss_pct_floor ?? t.loss_pct);
+  g.save();
+  if (t.loss_pct_floor) { g.fillStyle = css('--s2'); g.globalAlpha = 0.10; g.fillRect(a.left, y1, a.right-a.left, y2-y1); g.globalAlpha = 1;
+    g.strokeStyle = css('--s2'); g.lineWidth = 1; g.setLineDash([3,3]); g.beginPath(); g.moveTo(a.left,y2); g.lineTo(a.right,y2); g.stroke(); }
+  g.strokeStyle = css('--s2'); g.lineWidth = 2; g.setLineDash([6,4]); g.beginPath(); g.moveTo(a.left,y1); g.lineTo(a.right,y1); g.stroke();
+  g.setLineDash([]); g.fillStyle = css('--ink-2'); g.font = '12px system-ui, sans-serif'; const label = (txt, x, y, align, base) => { g.textAlign=align; g.textBaseline=base; const w = g.measureText(txt).width + 8, hh = 16;
+    const bx = align==='right' ? x-w+4 : x-4, by = base==='top' ? y-2 : y-hh+2; g.fillStyle = css('--surface'); g.globalAlpha = 0.9; g.fillRect(bx, by, w, hh); g.globalAlpha = 1; g.fillStyle = css('--ink-2'); g.fillText(txt, x, y); };
+  label('타겟 '+t.loss_pct+'% (링크 1번, 50→44.9g)', a.right-4, y1+3, 'right', 'top');
+  if (t.loss_pct_floor) label('44.5g 이하 = '+t.loss_pct_floor+'% 이상부터 애매', a.left+4, y2-3, 'left', 'bottom');
+  g.restore(); } };
 
 function fmtTime(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
 function fmt(v, d=1){ return v==null ? '—' : Number(v).toFixed(d); }
