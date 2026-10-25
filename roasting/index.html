@@ -64,6 +64,13 @@ button.ghost { background: transparent; color: var(--ink); border: 1px solid var
 .missing { color: var(--muted); }
 .est { color: var(--ink-2); font-style: italic; }
 .tag { display:inline-block; font-size: 11px; padding: 1px 6px; border-radius: 10px; border: 1px solid var(--axis); color: var(--ink-2); margin-left: 4px; }
+.rng { position:relative; width:220px; height:14px; display:inline-block; vertical-align:middle; }
+.rng .track { position:absolute; left:0; right:0; top:6px; height:2px; background:var(--grid); }
+.rng .span { position:absolute; top:5px; height:4px; background:var(--seq-light); border-radius:2px; }
+.rng .dot { position:absolute; top:2px; width:10px; height:10px; border-radius:50%; margin-left:-5px; border:2px solid var(--surface); }
+.rng .w { background:var(--seq-dark); } .rng .g { background:var(--seq-light); }
+#summary td.bar { text-align:left; }
+#summary td.loss b { font-weight:700; }
 ul.notes { margin: 8px 0 0; padding-left: 18px; font-size: 14px; color: var(--ink-2); }
 ul.notes li { margin-bottom: 4px; }
 </style>
@@ -77,6 +84,17 @@ ul.notes li { margin-bottom: 4px; }
     <button data-m="all" aria-pressed="true">전체</button>
     <button data-m="로링" aria-pressed="false">로링 500g</button>
     <button data-m="링크" aria-pressed="false">링크 50g</button>
+  </div>
+
+  <div class="card">
+    <h2>한눈에 보기 · 감소율과 Agtron</h2>
+    <p class="cap">막대는 Agtron 50~110 범위. 진한 점이 홀빈, 연한 점이 그라운드, 그 사이가 스프레드. 감소율의 기울임체는 추정값.</p>
+    <div class="tscroll">
+    <table id="summary">
+      <thead><tr><th>배치</th><th>머신</th><th>시간</th><th>감소율</th><th>홀빈</th><th>그라운드</th><th>스프레드</th><th style="text-align:left">홀빈 → 그라운드</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
   </div>
 
   <div class="card">
@@ -141,8 +159,8 @@ ul.notes li { margin-bottom: 4px; }
     <div class="tscroll">
     <table id="tbl">
       <thead><tr>
-        <th>배치</th><th>날짜</th><th>소유</th><th>커피</th><th>머신</th><th>투입g</th><th>배출g</th><th>감소%</th><th>추정%</th>
-        <th>시간</th><th>초반열</th><th>투입°C</th><th>TP°C</th><th>배출°C</th><th>ROR</th><th>홀빈</th><th>그라운드</th><th>스프레드</th><th>점수</th><th>커핑 노트</th>
+        <th>배치</th><th>날짜</th><th>소유</th><th>커피</th><th>머신</th><th>투입g</th><th>배출g</th><th>감소%</th><th>추정%</th><th>홀빈</th><th>그라운드</th><th>스프레드</th>
+        <th>시간</th><th>초반열</th><th>투입°C</th><th>TP°C</th><th>배출°C</th><th>ROR</th><th>점수</th><th>커핑 노트</th>
       </tr></thead>
       <tbody></tbody>
     </table>
@@ -261,6 +279,7 @@ function render(){
     type:'bar', data:{ labels: LRv.map(p=>p.name), datasets:[ bar('평균 ROR', LRv.map(p=>p.avg_ror), css('--s1')) ] },
     options: base({ plugins:{ legend:{display:false} }, scales:{ x:catX(), y:yAx(0,18,'°C/min') } })
   });
+  renderSummary();
   renderScatter();
 }
 
@@ -281,6 +300,22 @@ function renderScatter(){
   });
 }
 
+function renderSummary(){
+  const tb = document.querySelector('#summary tbody'); tb.innerHTML='';
+  const LO=50, HI=110, pct = v => ((v-LO)/(HI-LO)*100).toFixed(1)+'%';
+  visible().forEach(p=>{
+    const tr = document.createElement('tr');
+    const sw = p.machine==='로링' ? `<span class="sw" style="background:${colorOf(p)}"></span>` : '<span class="sw" style="border:1px solid var(--axis)"></span>';
+    const loss = p.loss_measured!=null ? `<b>${fmt(p.loss_measured)}%</b>` : (p.loss_est!=null ? `<span class="est" title="${p.loss_est_basis}">${fmt(p.loss_est)}%</span>` : '<span class="missing">—</span>');
+    tr.innerHTML = `<td class="name">${sw}${p.name}</td><td class="l">${p.machine}</td><td>${p.total_time}</td><td class="loss">${loss}</td>
+      <td>${p.agtron_whole}</td><td>${p.agtron_ground}</td><td>${p.agtron_spread}</td>
+      <td class="bar"><span class="rng" title="홀빈 ${p.agtron_whole} → 그라운드 ${p.agtron_ground}"><span class="track"></span>
+        <span class="span" style="left:${pct(p.agtron_whole)};width:${((p.agtron_ground-p.agtron_whole)/(HI-LO)*100).toFixed(1)}%"></span>
+        <span class="dot w" style="left:${pct(p.agtron_whole)}"></span><span class="dot g" style="left:${pct(p.agtron_ground)}"></span></span></td>`;
+    tb.appendChild(tr);
+  });
+}
+
 function renderTable(){
   const tb = document.querySelector('#tbl tbody'); tb.innerHTML='';
   const dash = '<span class="missing">—</span>';
@@ -296,9 +331,10 @@ function renderTable(){
       <td>${p.charge_g??dash}</td><td>${p.drop_g??dash}</td>
       <td>${p.loss_measured!=null?('<b>'+fmt(p.loss_measured)+'</b>'):dash}</td>
       <td>${p.loss_est!=null?('<span class="est" title="'+p.loss_est_basis+'">'+fmt(p.loss_est)+'</span>'):dash}</td>
+      <td>${p.agtron_whole}</td><td>${p.agtron_ground}</td><td>${p.agtron_spread}</td>
       <td>${p.total_time}</td>
       <td>${p.initial_heat??dash}</td><td>${p.charge_temp??dash}</td><td>${p.tp_temp??dash}</td><td>${p.drop_temp??dash}</td>
-      <td>${fmt(p.avg_ror)}</td><td>${p.agtron_whole}</td><td>${p.agtron_ground}</td><td>${p.agtron_spread}</td>
+      <td>${fmt(p.avg_ror)}</td>
       <td><input type="number" step="0.25" min="60" max="100" data-i="${i}" data-k="cupping_score" value="${p.cupping_score??''}"></td>
       <td class="l"><input type="text" data-i="${i}" data-k="cupping_note" value="${(p.cupping_note||'').replace(/"/g,'&quot;')}" placeholder="향미, 단맛, 결점"></td>`;
     tb.appendChild(tr);
