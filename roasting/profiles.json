@@ -6,7 +6,14 @@
       "로링": "500g 투입",
       "링크": "50g 투입, 투입/배출 무게 미기록"
     },
-    "loss_estimate_method": "링크 배치는 무게 미기록. 같은 커피의 로링 실측 감소율을 기준점으로, Agtron 그라운드 1포인트 어두울수록 +0.12%p, 로스팅 시간이 2분 이상 긴 점을 +0.5%p로 보정. 오차 ±1.5%p. 이 데이터 안에서는 Agtron과 실측 감소율의 상관이 없으므로(R²≈0) 경험칙일 뿐이다. 링크에서 무게를 재면 바로 교체한다."
+    "loss_estimate_method": "링크 배치는 무게 미기록. 같은 커피의 로링 실측 감소율을 기준점으로, Agtron 그라운드 1포인트 어두울수록 +0.12%p, 로스팅 시간이 2분 이상 긴 점을 +0.5%p로 보정. 오차 ±1.5%p. 이 데이터 안에서는 Agtron과 실측 감소율의 상관이 없으므로(R²≈0) 경험칙일 뿐이다. 링크에서 무게를 재면 바로 교체한다.",
+    "tasting_impressions": [
+      {
+        "date": "2026-10-25",
+        "by": "이치훈",
+        "note": "페르가미노 워시드 링크(홀빈 57.1 / 그라운드 75.4) 말고는 거의 다 라이트하게 다가왔다."
+      }
+    ]
   },
   "profiles": [
     {
@@ -39,7 +46,7 @@
       "loss_est_basis": "",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "라이트하게 다가옴 (10/25 전체 인상)"
     },
     {
       "id": "2026-10-23-nuguo-link-1-1",
@@ -71,7 +78,7 @@
       "loss_est_basis": "기준 누구오 · 로링 10/21 실측 10.0% @그라운드 86.2 → Agtron 차이 5.8×0.12 + 시간 보정 0.5",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "라이트하게 다가옴 (10/25 전체 인상)"
     },
     {
       "id": "2026-10-23-nuguo-link-1-2",
@@ -103,7 +110,7 @@
       "loss_est_basis": "기준 누구오 · 로링 10/21 실측 10.0% @그라운드 86.2 → Agtron 차이 2.5×0.12 + 시간 보정 0.5",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "라이트하게 다가옴 (10/25 전체 인상)"
     },
     {
       "id": "2026-10-23-nuguo-link-2-1",
@@ -135,7 +142,7 @@
       "loss_est_basis": "기준 누구오 · 로링 10/21 실측 10.0% @그라운드 86.2 → Agtron 차이 0.4×0.12 + 시간 보정 0.5",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "라이트하게 다가옴 (10/25 전체 인상)"
     },
     {
       "id": "2026-10-23-nuguo-link-2-2",
@@ -167,7 +174,7 @@
       "loss_est_basis": "기준 누구오 · 로링 10/21 실측 10.0% @그라운드 86.2 → Agtron 차이 2.4×0.12 + 시간 보정 0.5",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "라이트하게 다가옴 (10/25 전체 인상)"
     },
     {
       "id": "2026-10-23-perg-link",
@@ -199,7 +206,7 @@
       "loss_est_basis": "기준 길쭉이-1 · 로링 / 막생김-2 · 로링 실측 9.9% @그라운드 92.0 → Agtron 차이 16.5×0.12 + 시간 보정 0.5",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "유일하게 라이트하지 않게 다가옴 (10/25 전체 인상)"
     },
     {
       "id": "perg-long-1-loring",
@@ -231,7 +238,7 @@
       "loss_est_basis": "",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "라이트하게 다가옴 (10/25 전체 인상)"
     },
     {
       "id": "perg-odd-2-loring",
@@ -263,7 +270,7 @@
       "loss_est_basis": "",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "라이트하게 다가옴 (10/25 전체 인상)"
     },
     {
       "id": "2026-10-09-jh-long-loring",
@@ -295,7 +302,7 @@
       "loss_est_basis": "",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "라이트하게 다가옴 (10/25 전체 인상)"
     },
     {
       "id": "2026-10-09-jh-pb-loring",
@@ -327,7 +334,7 @@
       "loss_est_basis": "",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "라이트하게 다가옴 (10/25 전체 인상)"
     },
     {
       "id": "2026-10-02-1-loring",
@@ -359,7 +366,7 @@
       "loss_est_basis": "",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "라이트하게 다가옴 (10/25 전체 인상)"
     },
     {
       "id": "2026-10-02-2-loring",
@@ -391,7 +398,7 @@
       "loss_est_basis": "",
       "first_crack": null,
       "cupping_score": null,
-      "cupping_note": ""
+      "cupping_note": "라이트하게 다가옴 (10/25 전체 인상)"
     }
   ]
 }
