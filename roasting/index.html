@@ -78,7 +78,7 @@ ul.notes li { margin-bottom: 4px; }
 <body>
 <div class="wrap">
   <h1>로스팅 프로파일 기록</h1>
-  <p class="sub" id="subtitle">로링(500g) · 링크(50g) · 2026-10-25 기준. 링크 배치는 무게가 없어 감소율을 추정값으로 채웠다. 10/25 인상: 페르가미노 워시드 링크 말고는 거의 다 라이트. 점수는 아래 표에 입력한다.</p>
+  <p class="sub" id="subtitle">로링(500g) · 링크(50g) · 2026-10-25 기준. 타겟: 링크 1번 프로파일 50g → 44.9g (10.2%). 링크 배치는 무게가 없어 감소율을 추정값으로 채웠다. 10/25 인상: 페르가미노 워시드 링크 말고는 거의 다 라이트. 점수는 아래 표에 입력한다.</p>
 
   <div class="filters" id="filters">
     <button data-m="all" aria-pressed="true">전체</button>
@@ -187,6 +187,11 @@ const SERIES = ['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'];
 const KEY = 'roasting-scores-v2';
 let DATA = null, FILTER = 'all';
 const charts = {};
+const targetLine = { id:'targetLine', afterDatasetsDraw(c){ const t = DATA.meta && DATA.meta.target; if(!t) return;
+  const y = c.scales.y.getPixelForValue(t.loss_pct), g = c.ctx, a = c.chartArea;
+  g.save(); g.strokeStyle = css('--s2'); g.lineWidth = 2; g.setLineDash([6,4]); g.beginPath(); g.moveTo(a.left,y); g.lineTo(a.right,y); g.stroke();
+  g.setLineDash([]); g.fillStyle = css('--ink-2'); g.font = '12px system-ui, sans-serif'; g.textAlign='right'; g.textBaseline='bottom';
+  g.fillText('타겟 '+t.loss_pct+'% (링크 1번, 50→44.9g)', a.right-4, y-3); g.restore(); } };
 
 function fmtTime(s){ return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
 function fmt(v, d=1){ return v==null ? '—' : Number(v).toFixed(d); }
@@ -240,7 +245,8 @@ function render(){
         label: it => { const p=V[it.dataIndex]; if (it.parsed.y==null) return null;
           return it.datasetIndex===0 ? ` 실측 ${p.loss_measured}%  (${p.charge_g}g → ${p.drop_g}g)` : ` 추정 ${p.loss_est}%  (범위 ${p.loss_est_low}–${p.loss_est_high})`; },
         afterBody: it => { const p=V[it[0].dataIndex]; return p.loss_est_basis ? [p.loss_est_basis] : []; } } } },
-      scales:{ x:catX(), y:yAx(0,15,'%') } })
+      scales:{ x:catX(), y:yAx(0,15,'%') } }),
+    plugins:[targetLine]
   });
   // 겹침 방지: 실측/추정은 한 배치에 하나만 있으므로 같은 자리에 그린다
   charts.loss.options.datasets.bar.categoryPercentage = 0.6;
@@ -307,11 +313,11 @@ function renderSummary(){
     const tr = document.createElement('tr');
     const sw = p.machine==='로링' ? `<span class="sw" style="background:${colorOf(p)}"></span>` : '<span class="sw" style="border:1px solid var(--axis)"></span>';
     const loss = p.loss_measured!=null ? `<b>${fmt(p.loss_measured)}%</b>` : (p.loss_est!=null ? `<span class="est" title="${p.loss_est_basis}">${fmt(p.loss_est)}%</span>` : '<span class="missing">—</span>');
-    tr.innerHTML = `<td class="name">${sw}${p.name}</td><td class="l">${p.machine}</td><td>${p.total_time}</td><td class="loss">${loss}</td>
-      <td>${p.agtron_whole}</td><td>${p.agtron_ground}</td><td>${p.agtron_spread}</td>
-      <td class="bar"><span class="rng" title="홀빈 ${p.agtron_whole} → 그라운드 ${p.agtron_ground}"><span class="track"></span>
+    tr.innerHTML = `<td class="name">${sw}${p.name}${p.is_target?'<span class="tag" style="border-color:var(--s2);color:var(--s2)">타겟</span>':''}</td><td class="l">${p.machine}</td><td>${p.total_time}</td><td class="loss">${loss}</td>
+      <td>${p.agtron_whole??'<span class="missing">—</span>'}</td><td>${p.agtron_ground??'<span class="missing">—</span>'}</td><td>${p.agtron_spread??'<span class="missing">—</span>'}</td>
+      <td class="bar">${p.agtron_whole==null?'<span class="missing">Agtron 미기록</span>':`<span class="rng" title="홀빈 ${p.agtron_whole} → 그라운드 ${p.agtron_ground}"><span class="track"></span>
         <span class="span" style="left:${pct(p.agtron_whole)};width:${((p.agtron_ground-p.agtron_whole)/(HI-LO)*100).toFixed(1)}%"></span>
-        <span class="dot w" style="left:${pct(p.agtron_whole)}"></span><span class="dot g" style="left:${pct(p.agtron_ground)}"></span></span></td>`;
+        <span class="dot w" style="left:${pct(p.agtron_whole)}"></span><span class="dot g" style="left:${pct(p.agtron_ground)}"></span></span>`}</td>`;
     tb.appendChild(tr);
   });
 }
@@ -331,7 +337,7 @@ function renderTable(){
       <td>${p.charge_g??dash}</td><td>${p.drop_g??dash}</td>
       <td>${p.loss_measured!=null?('<b>'+fmt(p.loss_measured)+'</b>'):dash}</td>
       <td>${p.loss_est!=null?('<span class="est" title="'+p.loss_est_basis+'">'+fmt(p.loss_est)+'</span>'):dash}</td>
-      <td>${p.agtron_whole}</td><td>${p.agtron_ground}</td><td>${p.agtron_spread}</td>
+      <td>${p.agtron_whole??dash}</td><td>${p.agtron_ground??dash}</td><td>${p.agtron_spread??dash}</td>
       <td>${p.total_time}</td>
       <td>${p.initial_heat??dash}</td><td>${p.charge_temp??dash}</td><td>${p.tp_temp??dash}</td><td>${p.drop_temp??dash}</td>
       <td>${fmt(p.avg_ror)}</td>
