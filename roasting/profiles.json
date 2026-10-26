@@ -1,6 +1,6 @@
 {
   "meta": {
-    "updated": "2026-10-25",
+    "updated": "2026-10-26",
     "source": "이호열·이치훈 카카오톡 (10/21 스크린샷) + 이치훈 정리 메시지 (10/25)",
     "machines": {
       "로링": "500g 투입",
@@ -252,6 +252,342 @@
       "cupping_note": "가장 적포도 같고 좋았다. 링크 1번 프로파일 기준 배치 (타겟)",
       "profile_note": "1번 프로파일. 링크 페르가미노 내추럴 중 가장 좋았던 배치. 날짜·Agtron 미기록",
       "is_target": true
+    },
+    {
+      "id": "2026-10-26-perg-nat-link-1",
+      "date": "2026-10-26",
+      "owner": "진현 (확인 필요)",
+      "coffee": "페르가미노 내추럴",
+      "bean_note": "길쭉",
+      "machine": "링크",
+      "batch_g": 50,
+      "name": "페르가미노 내추럴 · 링크 1 (10/26)",
+      "initial_heat": null,
+      "charge_temp": 79,
+      "tp_temp": null,
+      "tp_sec": null,
+      "total_sec": 560,
+      "total_time": "9:20",
+      "drop_temp": 202,
+      "charge_g": 50,
+      "drop_g": 44.6,
+      "loss_measured": 10.8,
+      "loss_est": null,
+      "loss_est_low": null,
+      "loss_est_high": null,
+      "loss_est_basis": "",
+      "avg_ror": null,
+      "agtron_whole": null,
+      "agtron_ground": null,
+      "agtron_spread": null,
+      "first_crack": null,
+      "cupping_score": null,
+      "cupping_note": "테이스팅 10/27 예정",
+      "profile_note": "프로파일 1. Link Studio log2806. 온도 곡선은 로그 사진 눈대중(±5°C)",
+      "link_log": "logs/2026-10-26-link-log2806.jpg",
+      "curve_points": [
+        {
+          "x": 0,
+          "y": 79
+        },
+        {
+          "x": 0.33,
+          "y": 95
+        },
+        {
+          "x": 1,
+          "y": 116
+        },
+        {
+          "x": 2,
+          "y": 140
+        },
+        {
+          "x": 3,
+          "y": 154
+        },
+        {
+          "x": 4,
+          "y": 165
+        },
+        {
+          "x": 5,
+          "y": 177
+        },
+        {
+          "x": 6,
+          "y": 185
+        },
+        {
+          "x": 7,
+          "y": 192
+        },
+        {
+          "x": 8,
+          "y": 199
+        },
+        {
+          "x": 9,
+          "y": 204
+        },
+        {
+          "x": 9.333,
+          "y": 202
+        }
+      ],
+      "curve_source": "Link Studio 로그 사진에서 눈대중"
+    },
+    {
+      "id": "2026-10-26-perg-nat-link-2",
+      "date": "2026-10-26",
+      "owner": "진현 (확인 필요)",
+      "coffee": "페르가미노 내추럴",
+      "bean_note": "길쭉",
+      "machine": "링크",
+      "batch_g": 50,
+      "name": "페르가미노 내추럴 · 링크 2 (10/26)",
+      "initial_heat": null,
+      "charge_temp": 79,
+      "tp_temp": null,
+      "tp_sec": null,
+      "total_sec": 580,
+      "total_time": "9:40",
+      "drop_temp": 204.5,
+      "charge_g": 50,
+      "drop_g": 44.2,
+      "loss_measured": 11.6,
+      "loss_est": null,
+      "loss_est_low": null,
+      "loss_est_high": null,
+      "loss_est_basis": "",
+      "avg_ror": null,
+      "agtron_whole": null,
+      "agtron_ground": null,
+      "agtron_spread": null,
+      "first_crack": null,
+      "cupping_score": null,
+      "cupping_note": "테이스팅 10/27 예정",
+      "profile_note": "프로파일 2. 가장 길고 높게. Link Studio log2807. 온도 곡선은 로그 사진 눈대중(±5°C)",
+      "link_log": "logs/2026-10-26-link-log2807.jpg",
+      "curve_points": [
+        {
+          "x": 0,
+          "y": 79
+        },
+        {
+          "x": 0.33,
+          "y": 95
+        },
+        {
+          "x": 1,
+          "y": 116
+        },
+        {
+          "x": 2,
+          "y": 140
+        },
+        {
+          "x": 3,
+          "y": 154
+        },
+        {
+          "x": 4,
+          "y": 165
+        },
+        {
+          "x": 5,
+          "y": 177
+        },
+        {
+          "x": 6,
+          "y": 185
+        },
+        {
+          "x": 7,
+          "y": 192
+        },
+        {
+          "x": 8,
+          "y": 199
+        },
+        {
+          "x": 9,
+          "y": 204
+        },
+        {
+          "x": 9.667,
+          "y": 204.5
+        }
+      ],
+      "curve_source": "Link Studio 로그 사진에서 눈대중"
+    },
+    {
+      "id": "2026-10-26-perg-nat-link-3-1",
+      "date": "2026-10-26",
+      "owner": "진현 (확인 필요)",
+      "coffee": "페르가미노 내추럴",
+      "bean_note": "길쭉",
+      "machine": "링크",
+      "batch_g": 50,
+      "name": "페르가미노 내추럴 · 링크 3-1 (10/26)",
+      "initial_heat": null,
+      "charge_temp": 79,
+      "tp_temp": null,
+      "tp_sec": null,
+      "total_sec": 570,
+      "total_time": "9:30",
+      "drop_temp": 203,
+      "charge_g": 50,
+      "drop_g": 44.3,
+      "loss_measured": 11.4,
+      "loss_est": null,
+      "loss_est_low": null,
+      "loss_est_high": null,
+      "loss_est_basis": "",
+      "avg_ror": null,
+      "agtron_whole": null,
+      "agtron_ground": null,
+      "agtron_spread": null,
+      "first_crack": null,
+      "cupping_score": null,
+      "cupping_note": "테이스팅 10/27 예정",
+      "profile_note": "프로파일 3. Link Studio log2808. 온도 곡선은 로그 사진 눈대중(±5°C)",
+      "link_log": "logs/2026-10-26-link-log2808.jpg",
+      "curve_points": [
+        {
+          "x": 0,
+          "y": 79
+        },
+        {
+          "x": 0.33,
+          "y": 95
+        },
+        {
+          "x": 1,
+          "y": 116
+        },
+        {
+          "x": 2,
+          "y": 140
+        },
+        {
+          "x": 3,
+          "y": 154
+        },
+        {
+          "x": 4,
+          "y": 165
+        },
+        {
+          "x": 5,
+          "y": 177
+        },
+        {
+          "x": 6,
+          "y": 185
+        },
+        {
+          "x": 7,
+          "y": 192
+        },
+        {
+          "x": 8,
+          "y": 199
+        },
+        {
+          "x": 9,
+          "y": 204
+        },
+        {
+          "x": 9.5,
+          "y": 203
+        }
+      ],
+      "curve_source": "Link Studio 로그 사진에서 눈대중"
+    },
+    {
+      "id": "2026-10-26-perg-nat-link-3-2",
+      "date": "2026-10-26",
+      "owner": "진현 (확인 필요)",
+      "coffee": "페르가미노 내추럴",
+      "bean_note": "길쭉",
+      "machine": "링크",
+      "batch_g": 50,
+      "name": "페르가미노 내추럴 · 링크 3-2 (10/26)",
+      "initial_heat": null,
+      "charge_temp": 79,
+      "tp_temp": null,
+      "tp_sec": null,
+      "total_sec": 570,
+      "total_time": "9:30",
+      "drop_temp": 203,
+      "charge_g": 50,
+      "drop_g": 44.4,
+      "loss_measured": 11.2,
+      "loss_est": null,
+      "loss_est_low": null,
+      "loss_est_high": null,
+      "loss_est_basis": "",
+      "avg_ror": null,
+      "agtron_whole": null,
+      "agtron_ground": null,
+      "agtron_spread": null,
+      "first_crack": null,
+      "cupping_score": null,
+      "cupping_note": "테이스팅 10/27 예정",
+      "profile_note": "프로파일 3 반복. Link Studio log2809. 온도 곡선은 로그 사진 눈대중(±5°C)",
+      "link_log": "logs/2026-10-26-link-log2809.jpg",
+      "curve_points": [
+        {
+          "x": 0,
+          "y": 79
+        },
+        {
+          "x": 0.33,
+          "y": 95
+        },
+        {
+          "x": 1,
+          "y": 116
+        },
+        {
+          "x": 2,
+          "y": 140
+        },
+        {
+          "x": 3,
+          "y": 154
+        },
+        {
+          "x": 4,
+          "y": 165
+        },
+        {
+          "x": 5,
+          "y": 177
+        },
+        {
+          "x": 6,
+          "y": 185
+        },
+        {
+          "x": 7,
+          "y": 192
+        },
+        {
+          "x": 8,
+          "y": 199
+        },
+        {
+          "x": 9,
+          "y": 204
+        },
+        {
+          "x": 9.5,
+          "y": 203
+        }
+      ],
+      "curve_source": "Link Studio 로그 사진에서 눈대중"
     },
     {
       "id": "perg-long-1-loring",

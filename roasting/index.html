@@ -78,7 +78,7 @@ ul.notes li { margin-bottom: 4px; }
 <body>
 <div class="wrap">
   <h1>로스팅 프로파일 기록</h1>
-  <p class="sub" id="subtitle">로링(500g) · 링크(50g) · 2026-10-25 기준. 타겟: 링크 1번 프로파일 50g → 44.9g (10.2%), 44.5g 이하는 애매, 더 밝은 쪽은 괜찮을 수도. 링크 배치는 무게가 없어 감소율을 추정값으로 채웠다. 10/25 인상: 페르가미노 워시드 링크 말고는 거의 다 라이트. 점수는 아래 표에 입력한다.</p>
+  <p class="sub" id="subtitle">로링(500g) · 링크(50g) · 2026-10-26 기준. 타겟: 링크 1번 프로파일 50g → 44.9g (10.2%), 44.5g 이하는 애매, 더 밝은 쪽은 괜찮을 수도. 링크 배치는 무게가 없어 감소율을 추정값으로 채웠다. 10/25 인상: 페르가미노 워시드 링크 말고는 거의 다 라이트. 점수는 아래 표에 입력한다.</p>
 
   <div class="filters" id="filters">
     <button data-m="all" aria-pressed="true">전체</button>
@@ -117,8 +117,8 @@ ul.notes li { margin-bottom: 4px; }
   </div>
 
   <div class="card">
-    <h2>온도 곡선 (근사) · 로링</h2>
-    <p class="cap">투입 → 터닝포인트 → 배출, 기록된 3점을 잇는 근사 곡선. 링크는 온도 기록이 없어 빠진다. 범례 클릭으로 숨기기/보이기.</p>
+    <h2>온도 곡선 (근사) · 로링 실선, 링크 점선</h2>
+    <p class="cap">로링은 투입·TP·배출 3점을 잇는 근사. 링크는 Link Studio 로그 사진에서 눈대중으로 딴 값(±5°C)이라 네 곡선이 거의 겹친다. 링크 필터를 누르면 배치별 색으로 나뉜다. 범례 클릭으로 숨기기/보이기.</p>
     <div class="tall"><canvas id="curve"></canvas></div>
   </div>
 
@@ -274,13 +274,18 @@ function render(){
       scales:{ x:ax({ title:{display:true,text:'Agtron 그라운드',color:css('--muted')}, min:80, max:105 }), y:ax({ title:{display:true,text:'감소율 (%)',color:css('--muted')}, min:6, max:14 }) } })
   });
 
+  const LKv = V.filter(p=>p.machine==='링크' && p.curve_points);
+  const dashes = [[], [6,4], [2,3], [8,3,2,3]];
+  const curveSets = LRv.map(p=>({ label:p.name, data:curvePoints(p), borderColor:colorOf(p), backgroundColor:colorOf(p), borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.3 }))
+    .concat(LKv.map((p,i)=>{ const col = FILTER==='링크' ? css(SERIES[i % SERIES.length]) : css('--s8');
+      return { label:p.name, data:p.curve_points, borderColor:col, backgroundColor:col, borderWidth:2, borderDash: FILTER==='링크' ? [] : dashes[i % dashes.length], pointRadius:0, pointHoverRadius:5, tension:0.3 }; }));
   charts.curve = new Chart(document.getElementById('curve'), {
     type:'line',
-    data:{ datasets: LRv.map(p=>({ label:p.name, data:curvePoints(p), borderColor:colorOf(p), backgroundColor:colorOf(p), borderWidth:2, pointRadius:0, pointHoverRadius:5, tension:0.3 })) },
+    data:{ datasets: curveSets },
     options: base({ interaction:{ mode:'index', intersect:false },
       plugins:{ legend: legend('bottom'), tooltip:{ mode:'index', intersect:false, callbacks:{ title: it=>fmtTime(Math.round(it[0].parsed.x*60)), label: it=>` ${it.dataset.label}: ${it.parsed.y.toFixed(1)}°C` } } },
-      scales:{ x:ax({ type:'linear', min:0, max:8, title:{display:true,text:'시간 (분)',color:css('--muted')}, ticks:{color:css('--ink-2'), stepSize:1} }),
-               y:ax({ min:80, max:220, title:{display:true,text:'원두 온도 (°C)',color:css('--muted')} }) } })
+      scales:{ x:ax({ type:'linear', min:0, max:10, title:{display:true,text:'시간 (분)',color:css('--muted')}, ticks:{color:css('--ink-2'), stepSize:1} }),
+               y:ax({ min:60, max:220, title:{display:true,text:'원두 온도 (°C)',color:css('--muted')} }) } })
   });
 
   charts.spread = new Chart(document.getElementById('spread'), {
@@ -335,7 +340,7 @@ function renderTable(){
     const tr = document.createElement('tr'); tr.dataset.machine = p.machine;
     const sw = p.machine==='로링' ? `<span class="sw" style="background:${colorOf(p)}"></span>` : '<span class="sw" style="border:1px solid var(--axis)"></span>';
     tr.innerHTML = `
-      <td class="name">${sw}${p.name}</td>
+      <td class="name">${sw}${p.name}${p.link_log?` <a href="${p.link_log}" target="_blank" class="tag" style="text-decoration:none">로그</a>`:''}</td>
       <td>${p.date||'<span class="missing">미상</span>'}</td>
       <td class="l">${p.owner}</td>
       <td class="l">${p.coffee}${p.bean_note?`<span class="tag">${p.bean_note}</span>`:''}</td>
