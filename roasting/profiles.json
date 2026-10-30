@@ -597,7 +597,7 @@
       "bean_note": "길쭉",
       "machine": "링크",
       "batch_g": 50,
-      "name": "페르가미노 내추럴 · 링크 1 (10/30)",
+      "name": "페르가미노 내추럴 · 링크 9:20 1번 (10/30)",
       "initial_heat": null,
       "charge_temp": 79,
       "tp_temp": null,
@@ -619,7 +619,7 @@
       "first_crack": null,
       "cupping_score": null,
       "cupping_note": "",
-      "profile_note": "프로파일 1 반복 (10/26 배치 1과 동일 조건). 로그 미첨부",
+      "profile_note": "프로파일 1, 9:20 배출. 10/26 배치 1과 동일 조건·동일 결과",
       "link_log": null,
       "curve_points": [
         {
@@ -674,14 +674,14 @@
       "curve_source": "10/26 프로파일 1 곡선 재사용 (같은 조건)"
     },
     {
-      "id": "2026-10-30-perg-nat-link-2",
+      "id": "2026-10-30-perg-nat-link-1-915",
       "date": "2026-10-30",
       "owner": "진현 (확인 필요)",
       "coffee": "페르가미노 내추럴",
       "bean_note": "길쭉",
       "machine": "링크",
       "batch_g": 50,
-      "name": "페르가미노 내추럴 · 링크 2 (10/30)",
+      "name": "페르가미노 내추럴 · 링크 9:15 1번 (10/30)",
       "initial_heat": null,
       "charge_temp": 79,
       "tp_temp": null,
@@ -703,7 +703,7 @@
       "first_crack": null,
       "cupping_score": null,
       "cupping_note": "",
-      "profile_note": "프로파일 미기재. 프로파일 1보다 5초 빠르고 1도 낮게 배출. 로그 미첨부",
+      "profile_note": "프로파일 1, 9:15 배출 (5초 빠르게)",
       "link_log": null,
       "curve_points": [
         {
@@ -752,6 +752,170 @@
         }
       ],
       "curve_source": "10/26 프로파일 1 곡선을 배출점만 바꿔 재사용"
+    },
+    {
+      "id": "2026-10-30-perg-nat-link-2-920",
+      "date": "2026-10-30",
+      "owner": "진현 (확인 필요)",
+      "coffee": "페르가미노 내추럴",
+      "bean_note": "길쭉",
+      "machine": "링크",
+      "batch_g": 50,
+      "name": "페르가미노 내추럴 · 링크 9:20 2번 (10/30)",
+      "initial_heat": null,
+      "charge_temp": 79,
+      "tp_temp": null,
+      "tp_sec": null,
+      "total_sec": 560,
+      "total_time": "9:20",
+      "drop_temp": 202,
+      "charge_g": 50,
+      "drop_g": 44.6,
+      "loss_measured": 10.8,
+      "loss_est": null,
+      "loss_est_low": null,
+      "loss_est_high": null,
+      "loss_est_basis": "",
+      "avg_ror": null,
+      "agtron_whole": null,
+      "agtron_ground": null,
+      "agtron_spread": null,
+      "first_crack": null,
+      "cupping_score": null,
+      "cupping_note": "",
+      "profile_note": "프로파일 2, 9:20 배출. 프로파일 1 9:20과 무게 동일",
+      "link_log": null,
+      "curve_points": [
+        {
+          "x": 0,
+          "y": 79
+        },
+        {
+          "x": 0.33,
+          "y": 95
+        },
+        {
+          "x": 1,
+          "y": 116
+        },
+        {
+          "x": 2,
+          "y": 140
+        },
+        {
+          "x": 3,
+          "y": 154
+        },
+        {
+          "x": 4,
+          "y": 165
+        },
+        {
+          "x": 5,
+          "y": 177
+        },
+        {
+          "x": 6,
+          "y": 185
+        },
+        {
+          "x": 7,
+          "y": 192
+        },
+        {
+          "x": 8,
+          "y": 199
+        },
+        {
+          "x": 9,
+          "y": 204
+        },
+        {
+          "x": 9.333,
+          "y": 202
+        }
+      ],
+      "curve_source": "10/26 프로파일 2 곡선 모양 재사용, 배출점만 변경"
+    },
+    {
+      "id": "2026-10-30-perg-nat-link-2-915",
+      "date": "2026-10-30",
+      "owner": "진현 (확인 필요)",
+      "coffee": "페르가미노 내추럴",
+      "bean_note": "길쭉",
+      "machine": "링크",
+      "batch_g": 50,
+      "name": "페르가미노 내추럴 · 링크 9:15 2번 (10/30)",
+      "initial_heat": null,
+      "charge_temp": 79,
+      "tp_temp": null,
+      "tp_sec": null,
+      "total_sec": 555,
+      "total_time": "9:15",
+      "drop_temp": 200.8,
+      "charge_g": 50.1,
+      "drop_g": 44.8,
+      "loss_measured": 10.6,
+      "loss_est": null,
+      "loss_est_low": null,
+      "loss_est_high": null,
+      "loss_est_basis": "",
+      "avg_ror": null,
+      "agtron_whole": null,
+      "agtron_ground": null,
+      "agtron_spread": null,
+      "first_crack": null,
+      "cupping_score": null,
+      "cupping_note": "",
+      "profile_note": "프로파일 2, 9:15 배출. 투입 50.1g",
+      "link_log": null,
+      "curve_points": [
+        {
+          "x": 0,
+          "y": 79
+        },
+        {
+          "x": 0.33,
+          "y": 95
+        },
+        {
+          "x": 1,
+          "y": 116
+        },
+        {
+          "x": 2,
+          "y": 140
+        },
+        {
+          "x": 3,
+          "y": 154
+        },
+        {
+          "x": 4,
+          "y": 165
+        },
+        {
+          "x": 5,
+          "y": 177
+        },
+        {
+          "x": 6,
+          "y": 185
+        },
+        {
+          "x": 7,
+          "y": 192
+        },
+        {
+          "x": 8,
+          "y": 199
+        },
+        {
+          "x": 9.25,
+          "y": 200.8
+        }
+      ],
+      "curve_source": "10/26 프로파일 2 곡선 모양 재사용, 배출점만 변경"
     },
     {
       "id": "perg-long-1-loring",
